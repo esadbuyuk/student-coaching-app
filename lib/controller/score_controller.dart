@@ -74,7 +74,7 @@ class ScoreController {
     // final response = await http.get(Uri.parse(
     //     '$domainName/sub_skills_of_the_disciple.php?discipleId=$discipleID&skillId=$skillID'));
     final response = await http.get(Uri.parse(
-        'http://16.16.25.238/sub_skills_of_the_disciple.php?discipleId=$discipleID&skillId=$skillID'));
+        '${domainName}sub_skills_of_the_disciple.php?discipleId=$discipleID&skillId=$skillID'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData =
@@ -92,7 +92,7 @@ class ScoreController {
   Future<Map<String, List<Score>>> fetchMultiScoresWithDates(
       int discipleID) async {
     final response = await http.get(Uri.parse(
-        'http://16.16.25.238/get_scores_with_dates_of_all_main_skills.php?discipleId=$discipleID'));
+        '${domainName}get_scores_with_dates_of_all_main_skills.php?discipleId=$discipleID'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData =

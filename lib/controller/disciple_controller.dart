@@ -75,9 +75,8 @@ class DiscipleController {
   }
 
   Future<List<Score>> fetchDiscipleSkillsData() async {
-    String domainNameYedek = "http://16.16.25.238/";
     final response = await http.get(Uri.parse(
-        '${domainNameYedek}main_skills_of_the_disciple.php?discipleId=$_discipleID'));
+        '${domainName}main_skills_of_the_disciple.php?discipleId=$_discipleID'));
     // http://16.16.25.238/main_skills_of_the_disciple.php?discipleId=8
     if (response.statusCode == 200) {
       final List<dynamic> jsonData =

@@ -18,7 +18,7 @@ class AcademyController {
           academyName: "KAİHL",
           abbreviatedName: 'KAİHL',
           academySlogan: "Türkiye'ye Öncü, Dünyaya Örnek",
-          domainName: "http://13.60.244.86/",
+          domainName: "https://studentcoaching.tech/",
         );
 
   int getAcademyID() {
