@@ -108,6 +108,10 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                 indent: 60.w,
                 thickness: 0.2,
               ),
+              SizedBox(
+                height: 40.h,
+              ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,6 +142,10 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                 indent: 60.w,
                 thickness: 0.2,
               ),
+              SizedBox(
+                height: 40.h,
+              ),
+
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -246,7 +254,9 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                 indent: 60.w,
                 thickness: 0.2,
               ),
-
+              SizedBox(
+                height: 40.h,
+              ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -342,8 +352,6 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                 ),
               ),
               // divider
-              buildVerticalSpacer(),
-              buildVerticalSpacer(),
               buildVerticalSpacer(),
               buildVerticalSpacer(),
               buildVerticalSpacer(),

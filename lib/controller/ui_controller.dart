@@ -9,7 +9,7 @@ bool isKeyboardOpen(BuildContext context) {
 }
 
 bool isMobile(BuildContext context) {
-  return getScreenWidth(context) < 500;
+  return getScreenWidth(context) < 600;
 }
 
 double getScreenWidth(BuildContext context) {

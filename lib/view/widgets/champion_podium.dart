@@ -54,7 +54,7 @@ class _ChampionPodiumState extends State<ChampionPodium> {
           buildVerticalSpacer(),
           Text(
             widget.lessonName.toUpperCase(),
-            style: myTonicStyle(mySecondaryTextColor),
+            style: myTonicStyle(lessonColor!),
           ),
           buildSpacer(),
 
@@ -80,24 +80,29 @@ class _ChampionPodiumState extends State<ChampionPodium> {
       String lessonName, Color lessonColor, String nameSurname) {
     return Column(
       children: [
-        buildTrophy(lessonName, lessonColor),
+        selectTrophy(lessonName, lessonColor),
         SizedBox(height: 10.h),
         Text(
           nameSurname,
           style: myTonicStyle(mySecondaryTextColor),
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               net,
-              style: myDigitalStyle(color: mySecondaryTextColor),
+              style: myDigitalStyle(color: mySecondaryTextColor, fontSize: 20),
             ),
             SizedBox(
               width: 1.w,
             ),
-            Text(
-              "net artışı",
-              style: myTonicStyle(mySecondaryTextColor),
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0, bottom: 3.0),
+              child: Text(
+                "net artışı",
+                style: myTonicStyle(mySecondaryTextColor, fontSize: 9),
+              ),
             ),
           ],
         ),
@@ -107,37 +112,40 @@ class _ChampionPodiumState extends State<ChampionPodium> {
     );
   }
 
-  Container buildPodium(Color lessonColor, String lessonName) {
-    return Container(
-      height: 60,
-      width: 250,
-      decoration: BoxDecoration(
-        color: lessonColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(5),
-          topRight: Radius.circular(5),
-        ),
-        border: Border.all(
-          color: mySecondaryColor,
-          width: 0.8,
-        ),
-      ),
-      child: Center(
-        child: Text(
-          ("kral" + " tahtı").toUpperCase(),
-          style: myTonicStyle(myTextColor, fontSize: 15),
-        ),
-      ),
-    );
+  Center selectTrophy(String lessonName, lessonColor) {
+    Color cupColor = lessonColor;
+    String cupName = "assets/icons/trophy_5.png";
+    return buildTrophy(lessonColor, cupName);
   }
 
-  Center buildTrophy(String lessonName, lessonColor) {
+  Center buildTrophy(Color cupColor, String cupName) {
     return Center(
-      child: Image(
-        width: 200.h,
-        height: 100.h,
-        color: lessonColor,
-        image: const AssetImage("assets/icons/trophy_5.png"),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Glow Effect - Blur Effect with BackdropFilter
+          Container(
+            width: 80.h, // Biraz daha büyük yaparak glow efekti veririz
+            height: 120.h,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: cupColor.withOpacity(0.3), // Glow Rengi
+                  blurRadius: 35, // Ne kadar yayılacağını belirler
+                  spreadRadius: 1, // Parlaklığın yayılma oranı
+                ),
+              ],
+            ),
+          ),
+          // Actual Image Widget
+          Image(
+            width: 100.h,
+            height: 100.h,
+            color: cupColor,
+            image: AssetImage(cupName),
+          ),
+        ],
       ),
     );
   }

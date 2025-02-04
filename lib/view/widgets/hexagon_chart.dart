@@ -60,7 +60,7 @@ class PolygonChartPainter extends CustomPainter {
     ..style = PaintingStyle.stroke
     ..strokeWidth = 1;
 
-  // Yeni: Glow etkisi için bir Paint
+  // Glow etkisi için bir Paint
   final Paint _glowPaint = Paint()
     ..color = myAccentColor.withOpacity(0.3)
     ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);

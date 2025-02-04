@@ -56,6 +56,32 @@ flutter:
     - assets/icons/kings_crown.png
     - assets/icons/KAIHL_LOGO_MAVİ.png
     - assets/icons/KAIHL_LOGO_YAZILI.png
+    - assets/icons/throne_room_1.webp
+    - assets/icons/throne_room_2.webp
+    - assets/icons/throne_room_3.webp
+    - assets/icons/throne_room_4.avif
+    - assets/icons/throne_room_5.webp
+    - assets/icons/throne_front_view.webp
+    - assets/icons/throne_front_view_2.webp
+    - assets/icons/throne_front_view_3.webp
+    - assets/icons/throne_front_view_4.webp
+    - assets/icons/throne_front_view_5.webp
+    - assets/icons/throne_side_view.webp
+    - assets/thrones/islamic_throne_1.png
+    - assets/thrones/islamic_throne_2.png
+    - assets/thrones/islamic_throne_3.png
+    - assets/thrones/islamic_throne_4.png
+    - assets/thrones/islamic_throne_5.png
+    - assets/thrones/islamic_throne_6.png
+    - assets/thrones/islamic_throne_7.png
+    - assets/thrones/islamic_throne_8.png
+    - assets/thrones/islamic_throne_9.png
+    - assets/thrones/islamic_throne_10.png
+    - assets/thrones/islamic_throne_1_clipped.png
+    - assets/thrones/islamic_throne_5_clipped.png
+    - assets/thrones/islamic_throne_6_clipped.png
+    - assets/thrones/islamic_throne_8_clipped.png
+    - assets/thrones/islamic_throne_10_clipped.png
 
   fonts:
     - family: MyBrandFont

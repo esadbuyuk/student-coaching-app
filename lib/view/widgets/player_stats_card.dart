@@ -47,10 +47,11 @@ class PlayerStatsCard extends PlayerCard {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(
-                    child: Text(
-                  'No Connection',
-                  style: myTonicStyle(myAccentColor, fontSize: 10),
-                ));
+                  child: Text(
+                    'No Connection',
+                    style: myTonicStyle(myAccentColor, fontSize: 10),
+                  ),
+                );
               } else if (snapshot.hasData) {
                 final skillsData = snapshot.data!;
                 List<double> skillScores =

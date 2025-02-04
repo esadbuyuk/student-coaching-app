@@ -99,26 +99,40 @@ class HomePage extends StatelessWidget {
                 ),
               if (!isMobile(context))
                 SizedBox(
-                  height: 203.h,
+                  height: 103.h,
                   child: Center(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         mainAxisSize: MainAxisSize
                             .min, // İçeriği minimum genişlikte tutar
-                        children: List.generate(
-                          buttonCount, // userController.isUserAuthorized() ? 4 : 3,
-                          (index) => Padding(
-                            padding: const EdgeInsetsDirectional.only(end: 3),
-                            child: ButtonCard(
-                              title: ScreenCardData().screenCards[index].title,
-                              icon: ScreenCardData().screenCards[index].icon,
-                              destinationPage: ScreenCardData()
-                                  .screenCards[index]
-                                  .destinationPage,
+
+                        children: [
+                          const SizedBox(
+                            width: 240,
+                          ),
+                          Row(
+                            children: List.generate(
+                              buttonCount, // userController.isUserAuthorized() ? 4 : 3,
+                              (index) => Padding(
+                                padding:
+                                    const EdgeInsetsDirectional.only(end: 3),
+                                child: ButtonCard(
+                                  title:
+                                      ScreenCardData().screenCards[index].title,
+                                  icon:
+                                      ScreenCardData().screenCards[index].icon,
+                                  destinationPage: ScreenCardData()
+                                      .screenCards[index]
+                                      .destinationPage,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          const SizedBox(
+                            width: 240,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -186,92 +200,157 @@ class ButtonCard extends StatefulWidget {
 }
 
 class _ButtonCardState extends State<ButtonCard> {
+  bool _isHovered = false;
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-        context.go(widget.destinationPage);
-      },
-      child: Card(
-        color: myPrimaryColor,
-        shadowColor: mySecondaryColor,
-        elevation: 3.h,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.all(0),
-          child: SizedBox(
-            width: 183,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Flexible(
-                  flex: 2,
-                  child: Container(),
-                ),
-                if (widget.icon != null)
-                  Flexible(
-                    flex: 17,
-                    child: FittedBox(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          widget.icon,
-                          size: 100,
-                          color: mySecondaryColor,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          context.go(widget.destinationPage);
+        },
+        child: isMobile(context)
+            ? Card(
+                color: myPrimaryColor,
+                shadowColor: mySecondaryColor,
+                elevation: 3.h,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r)),
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.all(0),
+                  child: SizedBox(
+                    width: 183,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Flexible(
+                          flex: 2,
+                          child: Container(),
                         ),
-                      ),
+                        if (widget.icon != null)
+                          Flexible(
+                            flex: 17,
+                            child: FittedBox(
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  widget.icon,
+                                  size: 100,
+                                  color: myIconsColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        // if (widget.icon == null)
+                        //   Flexible(
+                        //     flex: 17,
+                        //     child: FittedBox(
+                        //         child: Center(
+                        //       child: Image(
+                        //         width: 200.h,
+                        //         height: 200.h,
+                        //         color: myBackgroundColor,
+                        //         image: const AssetImage(
+                        //             "assets/icons/trophy_6.png"),
+                        //       ),
+                        //     )),
+                        //   ),
+                        Flexible(
+                          flex: 1,
+                          child: Container(),
+                        ),
+                        Flexible(
+                          flex: 3,
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.only(
+                                start: 6, end: 6),
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: FittedBox(
+                                child: Text(
+                                  widget.title,
+                                  style: TextStyle(
+                                    fontFamily: 'MyTonicFont',
+                                    color: mySecondaryColor,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          flex: 2,
+                          child: Container(),
+                        ),
+                      ],
                     ),
                   ),
-                if (widget.icon == null)
-                  Flexible(
-                    flex: 17,
-                    child: FittedBox(
-                        child: Center(
-                      child: Image(
-                        width: 200.h,
-                        height: 200.h,
-                        color: myBackgroundColor,
-                        image: const AssetImage("assets/icons/trophy_6.png"),
-                      ),
-                    )),
-                  ),
-                Flexible(
-                  flex: 1,
-                  child: Container(),
                 ),
-                Flexible(
-                  flex: 3,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 6, end: 6),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: FittedBox(
-                        child: Text(
-                          widget.title,
-                          style: TextStyle(
-                            fontFamily: 'MyTonicFont',
-                            color: mySecondaryColor,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1,
+              )
+            : Card(
+                color: _isHovered
+                    ? myPrimaryColor.withOpacity(1)
+                    : myBackgroundColor.withOpacity(1),
+                // shadowColor: mySecondaryColor.withOpacity(1),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.r)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: _isHovered ? mySecondaryColor : mySecondaryColor,
+                        width: _isHovered ? 0.3 : 0.3),
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                  width: 263,
+                  child: Stack(
+                    children: [
+                      if (widget.icon != null)
+                        Positioned(
+                          right: -20,
+                          bottom: -20,
+                          child: FittedBox(
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Icon(
+                                widget.icon,
+                                size: 90,
+                                color: _isHovered
+                                    ? mySecondaryColor.withOpacity(0.6)
+                                    : myPrimaryColor.withOpacity(0.1),
+                              ),
+                            ),
+                          ),
+                        ),
+                      Positioned(
+                        left: 20,
+                        top: 5,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            widget.title,
+                            style: TextStyle(
+                              fontFamily: 'MyTonicFont',
+                              color:
+                                  _isHovered ? myTextColor : mySecondaryColor,
+                              fontSize: 19,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 3,
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-                Flexible(
-                  flex: 2,
-                  child: Container(),
-                ),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }

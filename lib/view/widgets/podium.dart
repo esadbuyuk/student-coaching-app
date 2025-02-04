@@ -58,7 +58,7 @@ class _PodiumState extends State<Podium> {
               buildLateralSpacer(),
 
               // First Place
-              buildNameColumn(1, "Ali Cabbar"),
+              buildNameColumn(1, "Yusuf Biber"),
               buildLateralSpacer(),
 
               // Third Place
@@ -74,24 +74,29 @@ class _PodiumState extends State<Podium> {
   Column buildNameColumn(int rank, String nameSurname) {
     return Column(
       children: [
-        buildTrophy(rank),
+        selectTrophy(rank),
         SizedBox(height: 10.h),
         Text(
           nameSurname,
           style: myTonicStyle(mySecondaryTextColor),
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               net,
-              style: myDigitalStyle(color: mySecondaryTextColor),
+              style: myDigitalStyle(color: mySecondaryTextColor, fontSize: 20),
             ),
             SizedBox(
               width: 1.w,
             ),
-            Text(
-              "net",
-              style: myTonicStyle(mySecondaryTextColor),
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0, bottom: 3.0),
+              child: Text(
+                "net",
+                style: myTonicStyle(mySecondaryTextColor, fontSize: 9),
+              ),
             ),
           ],
         ),
@@ -118,14 +123,10 @@ class _PodiumState extends State<Podium> {
               width: 0.8,
             ),
           ),
-          child: const Center(
+          child: Center(
             child: Text(
               "2",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: myIconsColor,
-              ),
+              style: myDigitalStyle(fontSize: 20),
             ),
           ),
         );
@@ -144,14 +145,10 @@ class _PodiumState extends State<Podium> {
                 width: 0.8,
               ),
             ),
-            child: const Center(
+            child: Center(
               child: Text(
                 "1",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: myIconsColor,
-                ),
+                style: myDigitalStyle(fontSize: 24),
               ),
             ));
       case 3:
@@ -169,14 +166,10 @@ class _PodiumState extends State<Podium> {
               width: 0.8,
             ),
           ),
-          child: const Center(
+          child: Center(
             child: Text(
               "3",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: myIconsColor,
-              ),
+              style: myDigitalStyle(fontSize: 18, color: mySecondaryTextColor),
             ),
           ),
         );
@@ -209,36 +202,56 @@ class _PodiumState extends State<Podium> {
     }
   }
 
-  Center buildTrophy(int rank) {
+  Center selectTrophy(int rank) {
+    String firstCup = "assets/icons/trophy_7_fixed.png";
+    String secondCup = "assets/icons/trophy_6.png";
+    String thirdCup = "assets/icons/trophy_3.png";
+
+    Color firstCupColor = firstColor ?? myAccentColor;
+    Color secondCupColor = secondColor ?? myAccentColor;
+    Color thirdCupColor = thirdColor ?? myAccentColor;
+
     switch (rank) {
       case 1:
-        return Center(
-          child: Image(
-            width: 100.h,
-            height: 100.h,
-            color: firstColor,
-            image: const AssetImage("assets/icons/trophy_7_fixed.png"),
-          ),
-        );
+        return buildTrophy(firstCupColor, firstCup);
+
       case 2:
-        return Center(
-          child: Image(
-            width: 100.h,
-            height: 100.h,
-            color: secondColor,
-            image: const AssetImage("assets/icons/trophy_6.png"),
-          ),
-        );
+        return buildTrophy(secondCupColor, secondCup);
       default:
-        return Center(
-          child: Image(
+        return buildTrophy(thirdCupColor, thirdCup);
+    }
+  }
+
+  Center buildTrophy(Color cupColor, String cupName) {
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Glow Effect - Blur Effect with BackdropFilter
+          Container(
+            width: 80.h, // Biraz daha büyük yaparak glow efekti veririz
+            height: 120.h,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: cupColor.withOpacity(0.3), // Glow Rengi
+                  blurRadius: 35, // Ne kadar yayılacağını belirler
+                  spreadRadius: 1, // Parlaklığın yayılma oranı
+                ),
+              ],
+            ),
+          ),
+          // Actual Image Widget
+          Image(
             width: 100.h,
             height: 100.h,
-            color: thirdColor,
-            image: const AssetImage("assets/icons/trophy_3.png"),
+            color: cupColor,
+            image: AssetImage(cupName),
           ),
-        );
-    }
+        ],
+      ),
+    );
   }
 
   Container buildVerticalSpacer() {
