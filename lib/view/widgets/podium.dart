@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,7 +17,7 @@ class Podium extends StatefulWidget {
 class _PodiumState extends State<Podium> {
   double verticalSpace = 20.h;
 
-  double lateralSpace = 20.h;
+  double lateralSpace = 50.h;
   int rank = 1;
   String nameSurname = "Sedat";
   String net = "114";
@@ -72,13 +74,17 @@ class _PodiumState extends State<Podium> {
   }
 
   Column buildNameColumn(int rank, String nameSurname) {
+    Random random = Random();
+    int randomNumber = random.nextInt(20);
+    net = "${100 + randomNumber}";
+
     return Column(
       children: [
         selectTrophy(rank),
         SizedBox(height: 10.h),
         Text(
           nameSurname,
-          style: myTonicStyle(mySecondaryTextColor),
+          style: myTonicStyle(myIconsColor),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

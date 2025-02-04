@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pcaweb/controller/ui_controller.dart';
 import 'package:pcaweb/view/widgets/champion_podium.dart';
 
 import '../../controller/disciple_controller.dart';
@@ -48,8 +49,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
   late Future<List<Score>> scoresFuture;
   late Future<Map<String, List<Score>>> multiScoresFuture;
   late ScoreController scoreController;
-  double verticalSpace = 150.h;
-  double lateralSpace = 30.h;
+  double verticalSpace = 140.h;
+  double lateralSpace = 40.h;
   int? headersStatValue;
   String? headersLabel;
   int totalQuestions = 20;
@@ -65,6 +66,7 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
 
   @override
   Widget build(BuildContext context) {
+    double leftPaddingSize = 40.w;
     // height lengths
     double columnHeight = 630.h;
     double singleLineChartHeight = 150.h;
@@ -94,12 +96,16 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildVerticalSpacer(),
 
-              Text(
-                "Son Denemenİn İlk üçü".toUpperCase(),
-                style: myTonicStyle(mySecondaryTextColor),
+              Padding(
+                padding: EdgeInsets.only(left: leftPaddingSize * 2),
+                child: Text(
+                  "Son Denemenİn İlk üçü".toUpperCase(),
+                  style: myTonicStyle(mySecondaryTextColor),
+                ),
               ),
               Divider(
                 color: mySecondaryColor,
@@ -113,14 +119,14 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
               ),
 
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildSpacer(),
+                  buildLeftSpacer(leftPaddingSize),
                   Column(
                     children: [
                       SizedBox(
-                        width: 500,
+                        width: getScreenWidth(context) - (leftPaddingSize * 2),
                         height: 320.h,
                         child: const Podium(),
                       ),
@@ -131,9 +137,12 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
               ),
               buildVerticalSpacer(),
 
-              Text(
-                "Her Ana Branşın En İyİsİ".toUpperCase(),
-                style: myTonicStyle(mySecondaryTextColor),
+              Padding(
+                padding: EdgeInsets.only(left: leftPaddingSize * 2),
+                child: Text(
+                  "Her Ana Branşın En İyİsİ".toUpperCase(),
+                  style: myTonicStyle(mySecondaryTextColor),
+                ),
               ),
               Divider(
                 color: mySecondaryColor,
@@ -152,15 +161,12 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    buildLateralSpacer(),
-                    buildLateralSpacer(),
-                    buildLateralSpacer(),
-                    buildLateralSpacer(),
+                    buildLeftSpacer(leftPaddingSize),
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const KingsThrone(
                             lessonName: "matematik",
                             discipleName: 'Fatih Alemdar',
@@ -172,8 +178,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const KingsThrone(
                             lessonName: "türkçe",
                             discipleName: 'Harun Kavak',
@@ -185,8 +191,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const KingsThrone(
                             discipleName: 'Süeda Ormancı',
                             lessonName: "fizik",
@@ -198,8 +204,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const KingsThrone(
                             discipleName: 'Salih Kocaçınar',
                             lessonName: "kimya",
@@ -211,8 +217,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const KingsThrone(
                             discipleName: 'Hasan Kurtulmuş',
                             lessonName: "biyoloji",
@@ -224,8 +230,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const KingsThrone(
                             discipleName: 'Erdal Şahin',
                             lessonName: "sosyal",
@@ -242,10 +248,13 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
               ),
               buildVerticalSpacer(),
 
-              Text(
-                "Her Ana Branşın En çok gelişme kateden öğrencisi"
-                    .toUpperCase(),
-                style: myTonicStyle(mySecondaryTextColor),
+              Padding(
+                padding: EdgeInsets.only(left: leftPaddingSize * 2),
+                child: Text(
+                  "Her Ana Branşın En çok gelişme kateden öğrencisi"
+                      .toUpperCase(),
+                  style: myTonicStyle(mySecondaryTextColor),
+                ),
               ),
               Divider(
                 color: mySecondaryColor,
@@ -263,15 +272,12 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    buildLateralSpacer(),
-                    buildLateralSpacer(),
-                    buildLateralSpacer(),
-                    buildLateralSpacer(),
+                    buildLeftSpacer(leftPaddingSize),
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const ChampionPodium(
                             lessonName: "matematik",
                             discipleName: 'Fatih Alemdar',
@@ -283,8 +289,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const ChampionPodium(
                             lessonName: "türkçe",
                             discipleName: 'Harun Kavak',
@@ -296,8 +302,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const ChampionPodium(
                             discipleName: 'Süeda Ormancı',
                             lessonName: "fizik",
@@ -309,8 +315,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const ChampionPodium(
                             discipleName: 'Salih Kocaçınar',
                             lessonName: "kimya",
@@ -322,8 +328,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const ChampionPodium(
                             discipleName: 'Hasan Kurtulmuş',
                             lessonName: "biyoloji",
@@ -335,8 +341,8 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
                     Column(
                       children: [
                         SizedBox(
-                          width: 500,
-                          height: 350.h,
+                          width: 600,
+                          height: 400.h,
                           child: const ChampionPodium(
                             discipleName: 'Erdal Şahin',
                             lessonName: "sosyal",
@@ -359,6 +365,12 @@ class MonthlyAwardsPageState extends State<MonthlyAwardsPage>
           ),
         ),
       ),
+    );
+  }
+
+  SizedBox buildLeftSpacer(double size) {
+    return SizedBox(
+      width: size,
     );
   }
 

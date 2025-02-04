@@ -31,6 +31,8 @@ class _ScoreListPageState extends State<ScoreListPage> {
   late Future<Trainer> trainerFuture;
   File? imageFile;
   ScrollController scrollController = ScrollController();
+  List<bool> isHoveredList = [];
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +40,8 @@ class _ScoreListPageState extends State<ScoreListPage> {
         futurePlayerList = _playerListController.fetchDiscipleListData();
     _trainerController = TrainerController();
     trainerFuture = _trainerController.fetchTrainerData();
+
+    isHoveredList = List.generate(500, (index) => false);
   }
 
   @override
@@ -57,6 +61,9 @@ class _ScoreListPageState extends State<ScoreListPage> {
             } else {
               final List<Disciple>? playerListData =
                   snapshot.data! as List<Disciple>?;
+
+              // List<bool> isHoveredList =
+              //     List.generate(playerListData!.length, (index) => false);
 
               return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -148,132 +155,171 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                     padding: EdgeInsets.only(
                                         top: 60.h, bottom: 180.h),
                                     itemBuilder: (context, playerNo) {
-                                      return GestureDetector(
-                                        onTapDown: (details) {
-                                          context.go('/charts');
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.only(
-                                            bottom: 5.h,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: myPrimaryColor,
-                                            border: Border.all(
-                                                color: mySecondaryColor),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(11.r),
+                                      return MouseRegion(
+                                        onEnter: (_) => setState(() =>
+                                            isHoveredList[playerNo] = true),
+                                        onExit: (_) => setState(() =>
+                                            isHoveredList[playerNo] = false),
+                                        child: GestureDetector(
+                                          onTapDown: (details) {
+                                            context.go('/charts');
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                              bottom: 5.h,
                                             ),
-                                          ),
-                                          height: 40.h,
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 20.w, right: 10.w),
-                                            child: Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 75.w,
-                                                  child: Text(
-                                                    style: myTonicStyle(
-                                                        myTextColor),
-                                                    "${playerNo + 1}. ${getTruncateNameSurname(playerListData[playerNo].name, playerListData[playerNo].surname)}",
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: boxWidths,
-                                                  child: Center(
+                                            decoration: BoxDecoration(
+                                              color: isHoveredList[playerNo]
+                                                  ? myBackgroundColor
+                                                  : myPrimaryColor,
+                                              border: Border.all(
+                                                  color: mySecondaryColor),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(11.r),
+                                              ),
+                                            ),
+                                            height: 40.h,
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 20.w, right: 10.w),
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 75.w,
                                                     child: Text(
                                                       style: myTonicStyle(
-                                                          myTextColor),
-                                                      (playerListData[playerNo]
-                                                                  .overall ??
-                                                              "-")
-                                                          .toString(),
+                                                        isHoveredList[playerNo]
+                                                            ? mySecondaryTextColor
+                                                            : myTextColor,
+                                                      ),
+                                                      "${playerNo + 1}. ${getTruncateNameSurname(playerListData[playerNo].name, playerListData[playerNo].surname)}",
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: boxWidths,
-                                                  child: Center(
-                                                    child: Text(
-                                                      style: myTonicStyle(
-                                                          myTextColor),
-                                                      (playerListData[playerNo]
-                                                                  .overall ??
-                                                              "-")
-                                                          .toString(),
+                                                  SizedBox(
+                                                    width: boxWidths,
+                                                    child: Center(
+                                                      child: Text(
+                                                        style: myTonicStyle(
+                                                          isHoveredList[
+                                                                  playerNo]
+                                                              ? mySecondaryTextColor
+                                                              : myTextColor,
+                                                        ),
+                                                        (playerListData[playerNo]
+                                                                    .overall ??
+                                                                "-")
+                                                            .toString(),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: boxWidths,
-                                                  child: Center(
-                                                    child: Text(
-                                                      style: myTonicStyle(
-                                                          myTextColor),
-                                                      (playerListData[playerNo]
-                                                                  .overall ??
-                                                              "-")
-                                                          .toString(),
+                                                  SizedBox(
+                                                    width: boxWidths,
+                                                    child: Center(
+                                                      child: Text(
+                                                        style: myTonicStyle(
+                                                          isHoveredList[
+                                                                  playerNo]
+                                                              ? mySecondaryTextColor
+                                                              : myTextColor,
+                                                        ),
+                                                        (playerListData[playerNo]
+                                                                    .overall ??
+                                                                "-")
+                                                            .toString(),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: boxWidths,
-                                                  child: Center(
-                                                    child: Text(
-                                                      style: myTonicStyle(
-                                                          myTextColor),
-                                                      (playerListData[playerNo]
-                                                                  .overall ??
-                                                              "-")
-                                                          .toString(),
+                                                  SizedBox(
+                                                    width: boxWidths,
+                                                    child: Center(
+                                                      child: Text(
+                                                        style: myTonicStyle(
+                                                          isHoveredList[
+                                                                  playerNo]
+                                                              ? mySecondaryTextColor
+                                                              : myTextColor,
+                                                        ),
+                                                        (playerListData[playerNo]
+                                                                    .overall ??
+                                                                "-")
+                                                            .toString(),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: boxWidths,
-                                                  child: Center(
-                                                    child: Text(
-                                                      style: myTonicStyle(
-                                                          myTextColor),
-                                                      (playerListData[playerNo]
-                                                                  .overall ??
-                                                              "-")
-                                                          .toString(),
+                                                  SizedBox(
+                                                    width: boxWidths,
+                                                    child: Center(
+                                                      child: Text(
+                                                        style: myTonicStyle(
+                                                          isHoveredList[
+                                                                  playerNo]
+                                                              ? mySecondaryTextColor
+                                                              : myTextColor,
+                                                        ),
+                                                        (playerListData[playerNo]
+                                                                    .overall ??
+                                                                "-")
+                                                            .toString(),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: boxWidths,
-                                                  child: Center(
-                                                    child: Text(
-                                                      style: myTonicStyle(
-                                                          myTextColor),
-                                                      (playerListData[playerNo]
-                                                                  .overall ??
-                                                              "-")
-                                                          .toString(),
+                                                  SizedBox(
+                                                    width: boxWidths,
+                                                    child: Center(
+                                                      child: Text(
+                                                        style: myTonicStyle(
+                                                          isHoveredList[
+                                                                  playerNo]
+                                                              ? mySecondaryTextColor
+                                                              : myTextColor,
+                                                        ),
+                                                        (playerListData[playerNo]
+                                                                    .overall ??
+                                                                "-")
+                                                            .toString(),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                const Expanded(
-                                                  child: SizedBox(),
-                                                ),
-                                                SizedBox(
-                                                  width: boxWidths,
-                                                  child: Center(
-                                                    child: Text(
-                                                      style: myTonicStyle(
-                                                          myTextColor),
-                                                      (playerListData[playerNo]
-                                                                  .overall ??
-                                                              "-")
-                                                          .toString(),
+                                                  SizedBox(
+                                                    width: boxWidths,
+                                                    child: Center(
+                                                      child: Text(
+                                                        style: myTonicStyle(
+                                                          isHoveredList[
+                                                                  playerNo]
+                                                              ? mySecondaryTextColor
+                                                              : myTextColor,
+                                                        ),
+                                                        (playerListData[playerNo]
+                                                                    .overall ??
+                                                                "-")
+                                                            .toString(),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                  const Expanded(
+                                                    child: SizedBox(),
+                                                  ),
+                                                  SizedBox(
+                                                    width: boxWidths,
+                                                    child: Center(
+                                                      child: Text(
+                                                        style: myTonicStyle(
+                                                          isHoveredList[
+                                                                  playerNo]
+                                                              ? mySecondaryTextColor
+                                                              : myTextColor,
+                                                        ),
+                                                        (playerListData[playerNo]
+                                                                    .overall ??
+                                                                "-")
+                                                            .toString(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),

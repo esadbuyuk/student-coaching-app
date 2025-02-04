@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pcaweb/view/widgets/multi_line_chart.dart';
@@ -30,23 +32,30 @@ class _KingsThroneState extends State<KingsThrone> {
 
   @override
   Widget build(BuildContext context) {
+    Random random = Random();
+    int randomNumber = random.nextInt(20);
+    net = "${15 + randomNumber}";
+
     Color? lessonColor =
         MultiLineScoreChartPainter.colorMap[widget.lessonName.toLowerCase()];
     String lessonThroneName;
     if (widget.lessonName.toLowerCase() == "matematik") {
-      lessonThroneName = "assets/thrones/islamic_throne_5_clipped.png";
+      lessonThroneName = "assets/images/thrones/islamic_throne_7.png";
     } else if (widget.lessonName.toLowerCase() == "türkçe") {
-      lessonThroneName = "assets/thrones/islamic_throne_6_clipped.png";
+      lessonThroneName = "assets/images/thrones/islamic_throne_6_clipped.png";
     } else if (widget.lessonName.toLowerCase() == "fizik") {
-      lessonThroneName = "assets/thrones/islamic_throne_9.png";
+      lessonThroneName = "assets/images/thrones/islamic_throne_9.png";
     } else if (widget.lessonName.toLowerCase() == "biyoloji") {
-      lessonThroneName = "assets/thrones/islamic_throne_10_clipped.png"; // 10
+      lessonThroneName =
+          "assets/images/thrones/islamic_throne_1_clipped.png"; // 10
     } else if (widget.lessonName.toLowerCase() == "kimya") {
-      lessonThroneName = "assets/thrones/islamic_throne_8_clipped.png"; // 8
+      lessonThroneName =
+          "assets/images/thrones/islamic_throne_8_clipped.png"; // 8
     } else if (widget.lessonName.toLowerCase() == "sosyal") {
-      lessonThroneName = "assets/thrones/islamic_throne_1_clipped.png"; // 1
+      lessonThroneName =
+          "assets/images/thrones/islamic_throne_10_clipped.png"; // 1
     } else {
-      lessonThroneName = "assets/thrones/islamic_throne_7.png";
+      lessonThroneName = "assets/images/thrones/islamic_throne_7.png";
     }
     return Container(
       decoration: BoxDecoration(
@@ -140,7 +149,7 @@ class _KingsThroneState extends State<KingsThrone> {
                 SizedBox(height: 0.h),
                 Text(
                   nameSurname,
-                  style: myTonicStyle(mySecondaryTextColor),
+                  style: myTonicStyle(myIconsColor),
                 ),
               ],
             ),

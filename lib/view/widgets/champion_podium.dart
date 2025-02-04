@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pcaweb/view/widgets/multi_line_chart.dart';
@@ -22,12 +24,16 @@ class _ChampionPodiumState extends State<ChampionPodium> {
   double lateralSpace = 20.h;
   int rank = 1;
   String nameSurname = "Sedat";
-  String net = "28";
+  String net = "24";
   Color? thirdColor = Colors.brown[900];
   Color? firstColor = Colors.orange[300];
   Color secondColor = Colors.grey;
   @override
   Widget build(BuildContext context) {
+    Random random = Random();
+    int randomNumber = random.nextInt(10);
+    net = "${15 + randomNumber}";
+
     Color? lessonColor =
         MultiLineScoreChartPainter.colorMap[widget.lessonName.toLowerCase()];
 
@@ -84,7 +90,7 @@ class _ChampionPodiumState extends State<ChampionPodium> {
         SizedBox(height: 10.h),
         Text(
           nameSurname,
-          style: myTonicStyle(mySecondaryTextColor),
+          style: myTonicStyle(myIconsColor),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
