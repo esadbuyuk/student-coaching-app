@@ -147,11 +147,11 @@ class PolygonContainerState extends State<PolygonContainer> {
     double containersRadius = widget.radius; // 120.h
 
     double polygonsRadius = isMobile(context)
-        ? 50.w
+        ? 40.w
         : containersRadius / 30 * 11; // sorun bu değerler de!
 
     double stacksWidth =
-        isMobile(context) ? 220.w : containersRadius / 5; // containersRadius
+        isMobile(context) ? 205.w : containersRadius / 5; // containersRadius
 
     double marginSize = isMobile(context) ? 45.w : containersRadius / 30 * 11;
     double polygonsBorderRadius = polygonsRadius + marginSize;
@@ -225,8 +225,9 @@ class PolygonContainerState extends State<PolygonContainer> {
             child: Container(
               width: 52,
               padding: const EdgeInsetsDirectional.all(2),
-              decoration:
-                  index == hoveredIndex ? buildSelectedDecoration() : null,
+              decoration: index == hoveredIndex
+                  ? buildSelectedDecoration(isMobile(context))
+                  : null,
               child: TweenAnimationBuilder<int>(
                 duration:
                     Duration(milliseconds: 5 * widget.data[index].toInt()),

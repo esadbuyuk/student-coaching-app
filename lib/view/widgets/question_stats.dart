@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pcaweb/controller/ui_controller.dart';
 import 'package:pcaweb/model/my_constants.dart';
 
 class QuestionStatsCard extends StatefulWidget {
@@ -91,9 +92,9 @@ class _QuestionStatsCardState extends State<QuestionStatsCard>
 
   @override
   Widget build(BuildContext context) {
-    double circularsHeight = 70.h;
-    double circularsWidth = 70.h;
-    double circularsStrokeWidth = 7;
+    double circularsHeight = isMobile(context) ? 120.h : 70.h;
+    double circularsWidth = isMobile(context) ? 120.h : 70.h;
+    double circularsStrokeWidth = isMobile(context) ? 9 : 7;
     Color textColors = mySecondaryTextColor;
     Color trueColor = myAccentColor;
     Color falseColor = Colors.red;
@@ -102,80 +103,153 @@ class _QuestionStatsCardState extends State<QuestionStatsCard>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            children: [
-              const Spacer(
-                flex: 1,
-              ),
-              Row(
-                children: [
-                  AnimatedBuilder(
-                    animation: _animationController,
-                    builder: (context, child) {
-                      return SizedBox(
-                        width: circularsHeight,
-                        height: circularsWidth,
-                        child: Stack(
+          isMobile(context)
+              ? Column(
+                  children: [
+                    Row(
+                      children: [
+                        AnimatedBuilder(
+                          animation: _animationController,
+                          builder: (context, child) {
+                            return SizedBox(
+                              width: circularsHeight,
+                              height: circularsWidth,
+                              child: Stack(
+                                children: [
+                                  CustomPaint(
+                                    size: Size(circularsWidth, circularsHeight),
+                                    painter: CircleBorderPainter(
+                                      strokeWidth: circularsStrokeWidth,
+                                      color: myPrimaryColor,
+                                    ),
+                                  ),
+                                  // Yanlış oranı
+                                  SizedBox(
+                                    height: circularsHeight,
+                                    width: circularsWidth,
+                                    child: CircularProgressIndicator(
+                                      value: _wrongAnimation.value,
+                                      strokeWidth: circularsStrokeWidth,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          falseColor),
+                                    ),
+                                  ),
+                                  // Doğru oranı
+                                  SizedBox(
+                                    height: circularsHeight,
+                                    width: circularsWidth,
+                                    child: CircularProgressIndicator(
+                                      value: _correctAnimation.value,
+                                      strokeWidth: circularsStrokeWidth,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          trueColor),
+                                    ),
+                                  ),
+                                  // Ortadaki metin
+                                  Center(
+                                    child: Text(
+                                      "${widget.totalQuestions}",
+                                      style: myDigitalStyle(color: textColors),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          width: isMobile(context) ? 16.w : 6.w,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomPaint(
-                              size: Size(circularsWidth, circularsHeight),
-                              painter: CircleBorderPainter(
-                                strokeWidth: circularsStrokeWidth,
-                                color: myPrimaryColor,
-                              ),
-                            ),
-                            // Yanlış oranı
-                            SizedBox(
-                              height: circularsHeight,
-                              width: circularsWidth,
-                              child: CircularProgressIndicator(
-                                value: _wrongAnimation.value,
-                                strokeWidth: circularsStrokeWidth,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(falseColor),
-                              ),
-                            ),
-                            // Doğru oranı
-                            SizedBox(
-                              height: circularsHeight,
-                              width: circularsWidth,
-                              child: CircularProgressIndicator(
-                                value: _correctAnimation.value,
-                                strokeWidth: circularsStrokeWidth,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(trueColor),
-                              ),
-                            ),
-                            // Ortadaki metin
-                            Center(
-                              child: Text(
-                                "${widget.totalQuestions}",
-                                style: myDigitalStyle(color: textColors),
-                              ),
-                            ),
+                            _buildStatRow(
+                                "Doğru", widget.correct, myAccentColor),
+                            _buildStatRow("Yanlış", widget.wrong, Colors.red),
+                            _buildStatRow(
+                                "Boş", widget.empty, mySecondaryTextColor),
                           ],
                         ),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    width: 6.w,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildStatRow("Doğru", widget.correct, myAccentColor),
-                      _buildStatRow("Yanlış", widget.wrong, Colors.red),
-                      _buildStatRow("Boş", widget.empty, mySecondaryTextColor),
-                    ],
-                  ),
-                ],
-              ),
-              const Spacer(
-                flex: 2,
-              ),
-            ],
-          ),
+                      ],
+                    ),
+                  ],
+                )
+              : Column(
+                  children: [
+                    const Spacer(
+                      flex: 1,
+                    ),
+                    Row(
+                      children: [
+                        AnimatedBuilder(
+                          animation: _animationController,
+                          builder: (context, child) {
+                            return SizedBox(
+                              width: circularsHeight,
+                              height: circularsWidth,
+                              child: Stack(
+                                children: [
+                                  CustomPaint(
+                                    size: Size(circularsWidth, circularsHeight),
+                                    painter: CircleBorderPainter(
+                                      strokeWidth: circularsStrokeWidth,
+                                      color: myPrimaryColor,
+                                    ),
+                                  ),
+                                  // Yanlış oranı
+                                  SizedBox(
+                                    height: circularsHeight,
+                                    width: circularsWidth,
+                                    child: CircularProgressIndicator(
+                                      value: _wrongAnimation.value,
+                                      strokeWidth: circularsStrokeWidth,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          falseColor),
+                                    ),
+                                  ),
+                                  // Doğru oranı
+                                  SizedBox(
+                                    height: circularsHeight,
+                                    width: circularsWidth,
+                                    child: CircularProgressIndicator(
+                                      value: _correctAnimation.value,
+                                      strokeWidth: circularsStrokeWidth,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          trueColor),
+                                    ),
+                                  ),
+                                  // Ortadaki metin
+                                  Center(
+                                    child: Text(
+                                      "${widget.totalQuestions}",
+                                      style: myDigitalStyle(color: textColors),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          width: isMobile(context) ? 16.w : 6.w,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildStatRow(
+                                "Doğru", widget.correct, myAccentColor),
+                            _buildStatRow("Yanlış", widget.wrong, Colors.red),
+                            _buildStatRow(
+                                "Boş", widget.empty, mySecondaryTextColor),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const Spacer(
+                      flex: 2,
+                    ),
+                  ],
+                ),
         ],
       ),
     );
@@ -188,7 +262,7 @@ class _QuestionStatsCardState extends State<QuestionStatsCard>
         child: Row(
           children: [
             SizedBox(
-              width: 3.w,
+              width: isMobile(context) ? 13.w : 3.w,
               height: 20.h,
               child: FittedBox(
                 child: Text(
@@ -197,7 +271,7 @@ class _QuestionStatsCardState extends State<QuestionStatsCard>
                 ),
               ),
             ),
-            SizedBox(width: 3.w),
+            SizedBox(width: isMobile(context) ? 13.w : 3.w),
             Text(
               label.toUpperCase(),
               style: myTonicStyle(mySecondaryTextColor, fontSize: 9),

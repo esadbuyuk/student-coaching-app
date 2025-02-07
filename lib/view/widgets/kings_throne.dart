@@ -59,10 +59,10 @@ class _KingsThroneState extends State<KingsThrone> {
     }
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage(lessonThroneName),
-        ),
+        // image: DecorationImage(
+        //   fit: BoxFit.cover,
+        //   image: AssetImage(lessonThroneName),
+        // ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.4), // Gölge rengi ve opaklığı
