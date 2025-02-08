@@ -25,6 +25,21 @@ class Score {
     this.minValue,
   });
 
+  Score copyWith({DateTime? date, int? score, String? name, int? discipleID}) {
+    return Score(
+      date: date ?? this.date,
+      score: score ?? this.score,
+      name: name ?? this.name,
+      discipleID: discipleID ?? this.discipleID,
+      skillID: skillID ?? this.skillID,
+      type: type ?? this.type,
+      evaluationType: evaluationType ?? this.evaluationType,
+      parentSkillID: parentSkillID ?? this.parentSkillID,
+      maxValue: maxValue ?? this.maxValue,
+      minValue: minValue ?? this.minValue,
+    );
+  }
+
   factory Score.fromJson(
     Map<String, dynamic> json,
     int discipleID,

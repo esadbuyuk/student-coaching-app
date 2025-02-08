@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pcaweb/view/screens/charts_page.dart';
 import 'package:pcaweb/view/screens/disciple_list_page.dart';
 import 'package:pcaweb/view/screens/home_page.dart';
+import 'package:pcaweb/view/screens/last_test_results_page.dart';
 import 'package:pcaweb/view/screens/log_in_page.dart';
 import 'package:pcaweb/view/screens/monthly_awards_page.dart';
 import 'package:pcaweb/view/screens/player_profile_page.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
     ]);
     final GoRouter router = GoRouter(
       navigatorKey: navigatorKey,
-      initialLocation: '/charts',
+      initialLocation: '/monthWinners',
       routes: [
         GoRoute(
           path: '/login',
@@ -63,6 +64,10 @@ class MyApp extends StatelessWidget {
         GoRoute(
           path: '/charts',
           builder: (context, state) => const ChartsPage(),
+        ),
+        GoRoute(
+          path: '/lastTestResults',
+          builder: (context, state) => const LastTestResultsPage(),
         ),
         GoRoute(
           path: '/monthWinners',

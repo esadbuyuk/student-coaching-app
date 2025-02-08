@@ -162,7 +162,7 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                             isHoveredList[playerNo] = false),
                                         child: GestureDetector(
                                           onTapDown: (details) {
-                                            context.go('/charts');
+                                            context.go('/lastTestResults');
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(

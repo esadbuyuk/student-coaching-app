@@ -51,13 +51,24 @@ import 'package:flutter/material.dart';
 // const Color mySecondaryTextColor = Color(0xffB5C1C7);
 
 // --- My First Palette
-const bool darkMode = true;
+const bool darkMode = false;
 
 const Color myBackgroundColor =
-    darkMode ? Color(0xff010624) : Color(0xff9B9DA9);
-const Color myPrimaryColor = darkMode ? Color(0xffA3ABAA) : Color(0xff5D5B79);
-const Color mySecondaryColor = darkMode ? Color(0xffD8EAF0) : Color(0xffDDE1FF);
+    darkMode ? Color(0xff010624) : Color(0xffC3C5CE); // 9B9DA9
+const Color myPrimaryColor =
+    darkMode ? Color(0xffA3ABAA) : Color(0xff5D5B79); // 4C4B5F
+const Color mySecondaryColor =
+    darkMode ? Color(0xffD8EAF0) : Color(0xff9090A4); // 9090A4 DDE1FF
 const Color myAccentColor = darkMode ? Color(0xff03A9F4) : Color(0xff2C38BB);
+// const Color myBackgroundColor =
+//     Color(0xFFF8F9FA); // Açık gri-beyaz tonu, ferah ve nötr bir arka plan
+// const Color myPrimaryColor = Color(
+//     0xFF1976D2); // Canlı ve güven veren bir mavi tonu, eğitim uygulamaları için ideal
+// const Color mySecondaryColor = Color(
+//     0xFFF57C00); // Sıcak ve enerjik turuncu tonu, dikkat çekici ve motive edici
+// const Color myAccentColor = Color(
+//     0xFF43A047); // Doğayla özdeşleştirilen yeşil tonu, denge ve huzur sağlar
+
 const Color myIconsColor = darkMode ? Color(0xffFFFFFE) : Color(0xffFFFFFE);
 const Color myDividerColor = darkMode ? Color(0xffBDBDBD) : Color(0xffBDBDBD);
 const Color myTextColor = darkMode ? Color(0xff212121) : Color(0xffB5C1C7);
@@ -90,6 +101,8 @@ const Color mySecondaryTextColor =
 //     darkMode ? Color(0xffB5C1C7) : Color(0xff212121);
 
 // --- Palette 2 PitBall
+// const bool darkMode = true;
+//
 // const Color myBackgroundColor = Color(0xff141B14); // 41575B);//202720);
 // const Color myPrimaryColor = Color(0xffA3ABAA);
 // const Color mySecondaryColor = Color(0xffD8EAF0);
@@ -113,13 +126,13 @@ TextStyle myTonicStyle(Color color,
   );
 }
 
-TextStyle mySloganStyle() {
+TextStyle mySloganStyle({Color color = mySecondaryColor}) {
   // Using by HomePage
-  return const TextStyle(
+  return TextStyle(
     fontFamily: 'MyBeatifulFont',
     fontSize: 14,
     fontWeight: FontWeight.w900,
-    color: mySecondaryColor,
+    color: color,
   );
 }
 

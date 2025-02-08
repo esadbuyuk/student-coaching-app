@@ -45,23 +45,26 @@ class HomePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Image(
-                        width: 390,
-                        height: 130,
-                        color: myPrimaryColor,
-                        image: AssetImage(
-                          "assets/icons/KAIHL_LOGO_YAZILI.png",
+                      const Padding(
+                        padding: EdgeInsets.only(right: 12.0),
+                        child: Image(
+                          width: 390,
+                          height: 130,
+                          color: myPrimaryColor,
+                          image: AssetImage(
+                            "assets/icons/KAIHL_LOGO_YAZILI.png",
+                          ),
                         ),
                       ),
 
                       // SizedBox(
                       //     width: 180.h, child: FittedBox(child: BrandName())),
                       SizedBox(
-                        height: 20.h,
+                        height: 10.h,
                       ),
-                      SizedBox(
-                          width: 180.h,
-                          child: const FittedBox(child: HomeText())),
+                      // SizedBox(
+                      //     width: 180.h,
+                      //     child: const FittedBox(child: HomeText())),
                       SizedBox(
                         height: 20.h,
                       ),
@@ -276,7 +279,7 @@ class _ButtonCardState extends State<ButtonCard> {
                                   widget.title,
                                   style: TextStyle(
                                     fontFamily: 'MyTonicFont',
-                                    color: mySecondaryColor,
+                                    color: myTextColor,
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w900,
                                     letterSpacing: 1,
@@ -298,16 +301,33 @@ class _ButtonCardState extends State<ButtonCard> {
             : Card(
                 color: _isHovered
                     ? myPrimaryColor.withOpacity(1)
-                    : myBackgroundColor.withOpacity(1),
+                    : mySecondaryColor.withOpacity(1),
                 // shadowColor: mySecondaryColor.withOpacity(1),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.r)),
+                    borderRadius: BorderRadius.circular(0.r)),
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(
-                        color: _isHovered ? mySecondaryColor : mySecondaryColor,
-                        width: _isHovered ? 0.3 : 0.3),
-                    borderRadius: BorderRadius.circular(4.r),
+                    border: BorderDirectional(
+                        bottom: BorderSide(
+                            color:
+                                _isHovered ? myAccentColor : mySecondaryColor,
+                            width: _isHovered ? 3 : 0.3),
+                        end: BorderSide(
+                            color: _isHovered
+                                ? mySecondaryColor
+                                : mySecondaryColor,
+                            width: _isHovered ? 0.3 : 0.3),
+                        top: BorderSide(
+                            color: _isHovered
+                                ? mySecondaryColor
+                                : mySecondaryColor,
+                            width: _isHovered ? 0.3 : 0.3),
+                        start: BorderSide(
+                            color: _isHovered
+                                ? mySecondaryColor
+                                : mySecondaryColor,
+                            width: _isHovered ? 0.3 : 0.3)),
+                    // borderRadius: BorderRadius.circular(4.r),
                   ),
                   width: 263,
                   child: Stack(
@@ -324,7 +344,7 @@ class _ButtonCardState extends State<ButtonCard> {
                                 size: 90,
                                 color: _isHovered
                                     ? mySecondaryColor.withOpacity(0.6)
-                                    : myPrimaryColor.withOpacity(0.1),
+                                    : myPrimaryColor.withOpacity(0.2),
                               ),
                             ),
                           ),
@@ -338,8 +358,7 @@ class _ButtonCardState extends State<ButtonCard> {
                             widget.title,
                             style: TextStyle(
                               fontFamily: 'MyTonicFont',
-                              color:
-                                  _isHovered ? myTextColor : mySecondaryColor,
+                              color: _isHovered ? myIconsColor : myPrimaryColor,
                               fontSize: 19,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 3,

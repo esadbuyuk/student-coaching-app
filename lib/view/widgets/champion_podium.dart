@@ -27,6 +27,7 @@ class _ChampionPodiumState extends State<ChampionPodium> {
   String net = "24";
   Color? thirdColor = Colors.brown[900];
   Color? firstColor = Colors.orange[300];
+  double shadowBoxWidths = 200;
   Color secondColor = Colors.grey;
   @override
   Widget build(BuildContext context) {
@@ -56,11 +57,31 @@ class _ChampionPodiumState extends State<ChampionPodium> {
         color: darkMode ? myBackgroundColor : myPrimaryColor,
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           buildVerticalSpacer(),
-          Text(
-            widget.lessonName.toUpperCase(),
-            style: myTonicStyle(lessonColor!),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.3),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(5),
+                topRight: Radius.circular(5),
+              ),
+              border: Border.all(
+                color: mySecondaryColor,
+                width: 0.8,
+              ),
+            ),
+            width: shadowBoxWidths,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Center(
+                child: Text(
+                  widget.lessonName.toUpperCase(),
+                  style: myTonicStyle(lessonColor!),
+                ),
+              ),
+            ),
           ),
           buildSpacer(),
 
@@ -98,7 +119,9 @@ class _ChampionPodiumState extends State<ChampionPodium> {
           children: [
             Text(
               net,
-              style: myDigitalStyle(color: mySecondaryTextColor, fontSize: 20),
+              style: myDigitalStyle(
+                  color: darkMode ? mySecondaryTextColor : myTextColor,
+                  fontSize: 20),
             ),
             SizedBox(
               width: 1.w,
@@ -107,7 +130,9 @@ class _ChampionPodiumState extends State<ChampionPodium> {
               padding: const EdgeInsets.only(left: 4.0, bottom: 3.0),
               child: Text(
                 "net artışı",
-                style: myTonicStyle(mySecondaryTextColor, fontSize: 9),
+                style: myTonicStyle(
+                    darkMode ? mySecondaryTextColor : myTextColor,
+                    fontSize: 9),
               ),
             ),
           ],

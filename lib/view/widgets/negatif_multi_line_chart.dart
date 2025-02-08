@@ -5,13 +5,13 @@ import 'package:pcaweb/view/widgets/widget_decorations.dart';
 import '../../model/my_constants.dart';
 import '../../model/score.dart';
 
-class MultiLineScoreChart extends StatefulWidget {
+class DifficultyMultiChart extends StatefulWidget {
   final Map<String, List<Score>> scoreMap;
   final bool showTags;
   final bool showNegative;
   final Function callbackFunct;
 
-  const MultiLineScoreChart({
+  const DifficultyMultiChart({
     super.key,
     required this.scoreMap,
     this.showTags = true,
@@ -20,10 +20,10 @@ class MultiLineScoreChart extends StatefulWidget {
   });
 
   @override
-  MultiLineScoreChartState createState() => MultiLineScoreChartState();
+  DifficultyMultiChartState createState() => DifficultyMultiChartState();
 }
 
-class MultiLineScoreChartState extends State<MultiLineScoreChart>
+class DifficultyMultiChartState extends State<DifficultyMultiChart>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -59,7 +59,7 @@ class MultiLineScoreChartState extends State<MultiLineScoreChart>
               decoration: buildInsideShadow(),
               child: CustomPaint(
                 size: const Size(500, 300),
-                painter: MultiLineScoreChartPainter(
+                painter: DifficultyMultiChartPainter(
                   widget.scoreMap,
                   widget.showTags,
                   widget.showNegative,
@@ -77,7 +77,7 @@ class MultiLineScoreChartState extends State<MultiLineScoreChart>
 
   Widget _buildLegend() {
     // final colors = MultiLineScoreChartPainter.colorMap;
-    final colorMap = MultiLineScoreChartPainter.colorMap;
+    final colorMap = DifficultyMultiChartPainter.colorMapForNegative;
     final skillNames = widget.scoreMap.keys.toList();
     // final scoresList = widget.scoreMap.values.toList();
     final lastValuesofEachSubjectList = widget.scoreMap.entries.map((entry) {
@@ -109,10 +109,10 @@ class MultiLineScoreChartState extends State<MultiLineScoreChart>
                 width: 15,
                 height: 15,
                 color: widget.showNegative
-                    ? MultiLineScoreChartPainter
+                    ? DifficultyMultiChartPainter
                         .colorMapForNegative[skillNames[index].toLowerCase()]
-                    : MultiLineScoreChartPainter
-                        .colorMap[skillNames[index].toLowerCase()],
+                    : DifficultyMultiChartPainter
+                        .colorMapForNegative[skillNames[index].toLowerCase()],
                 // color: colors[index % colors.length],
               ),
               const SizedBox(width: 5),
@@ -128,24 +128,14 @@ class MultiLineScoreChartState extends State<MultiLineScoreChart>
   }
 }
 
-double lightOpacity = 0.2;
+double lightOpacity = 1;
 
-class MultiLineScoreChartPainter extends CustomPainter {
+class DifficultyMultiChartPainter extends CustomPainter {
   final Map<String, List<Score>> scoreMap;
   final bool showTags;
   final bool showNegative;
   final double animationValue;
   bool flagForOnce = false;
-
-  static Map<String, Color> colorMap = {
-    "matematik": Colors.blue,
-    "türkçe": Colors.red,
-    "sosyal": Colors.green,
-    "fizik": Colors.orange,
-    "kimya": Colors.purple,
-    "total": Colors.blueGrey,
-    "biyoloji": Colors.lime,
-  };
 
   static Map<String, Color> colorMapForNegative = {
     "doğru": Colors.blue,
@@ -153,28 +143,28 @@ class MultiLineScoreChartPainter extends CustomPainter {
     "boş": Colors.green,
     "zorluk": Colors.orange,
   };
-  MultiLineScoreChartPainter(
+  DifficultyMultiChartPainter(
       this.scoreMap, this.showTags, this.showNegative, this.animationValue);
 
-  List<Color> lineColors = colorMap.values.toList();
+  List<Color> lineColors = colorMapForNegative.values.toList();
 
   static void selectColor(String selectedColorName) {
-    if (!colorMap.containsKey(selectedColorName)) {
+    if (!colorMapForNegative.containsKey(selectedColorName)) {
       // print("Hata: '$selectedColorName' geçerli bir renk adı değil.");
       return;
     }
 
     // Renkleri güncelle
-    colorMap.forEach((key, value) {
-      colorMap[key] = key == selectedColorName
+    colorMapForNegative.forEach((key, value) {
+      colorMapForNegative[key] = key == selectedColorName
           ? value.withOpacity(1.0) // Seçilen rengi tam opak yap
           : value.withOpacity(lightOpacity); // Diğer renklerin opaklığını azalt
     });
   }
 
   static void resetColors() {
-    colorMap.forEach((key, value) {
-      colorMap[key] = true
+    colorMapForNegative.forEach((key, value) {
+      colorMapForNegative[key] = true
           ? value.withOpacity(1.0) // Seçilen rengi tam opak yap
           : value.withOpacity(lightOpacity); // Diğer renklerin opaklığını azalt
     });
@@ -189,20 +179,20 @@ class MultiLineScoreChartPainter extends CustomPainter {
 
     // Grid çizimi
     for (double i = 0; i <= 100; i += 20) {
-      // for (double i = 0; i <= 100; i += 100) {
-      //   canvas.drawLine(
-      //     Offset(0, size.height - i * size.height / 100),
-      //     Offset(size.width, size.height - i * size.height / 100),
-      //     paintBackground,
-      //   );
-      // }
-      // for (double i = 0; i <= 100; i += 100) {
-      //   canvas.drawLine(
-      //     Offset(i * size.width / 100, 0),
-      //     Offset(i * size.width / 100, size.height),
-      //     paintBackground,
-      //   );
-      // }
+      for (double i = 0; i <= 100; i += 50) {
+        canvas.drawLine(
+          Offset(0, size.height - i * size.height / 100),
+          Offset(size.width, size.height - i * size.height / 100),
+          paintBackground,
+        );
+      }
+      for (double i = 0; i <= 100; i += 100) {
+        canvas.drawLine(
+          Offset(i * size.width / 100, 0),
+          Offset(i * size.width / 100, size.height),
+          paintBackground,
+        );
+      }
       if (showTags && !showNegative) {
         TextSpan span = TextSpan(
           style: myDigitalStyle(color: mySecondaryTextColor),
@@ -254,7 +244,7 @@ class MultiLineScoreChartPainter extends CustomPainter {
       if (scores.isEmpty) continue;
 
       double columnWidth = (size.width - margin) / (scores.length - 1);
-      List<Color> lineColors = colorMap.values.toList();
+      List<Color> lineColors = colorMapForNegative.values.toList();
 
       Paint paint = Paint()
         ..color = lineColors[index % lineColors.length]
@@ -294,11 +284,12 @@ class MultiLineScoreChartPainter extends CustomPainter {
       for (int i = 1; i < scores.length; i++) {
         double x = margin + columnWidth * i;
         double y =
-            size.height - scores[i].score * size.height / 100 * animationValue;
+            size.height * (1 - (scores[i].score + 100) / 200) * animationValue;
 
         double previousX = margin + columnWidth * (i - 1);
-        double previousY = size.height -
-            scores[i - 1].score * size.height / 100 * animationValue;
+        double previousY = size.height *
+            (1 - (scores[i - 1].score + 100) / 200) *
+            animationValue;
 
         // Bezier eğrisi kontrol noktalarını belirleW
         double controlX = (previousX + x) / 2;

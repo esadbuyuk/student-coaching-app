@@ -14,7 +14,7 @@ class Slogan extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       _academyController.getAcademySlogan(),
-      style: mySloganStyle(),
+      style: mySloganStyle(color: darkMode ? mySecondaryColor : myIconsColor),
     );
   }
 }

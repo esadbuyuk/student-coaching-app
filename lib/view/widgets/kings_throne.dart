@@ -85,7 +85,7 @@ class _KingsThroneState extends State<KingsThrone> {
           Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withOpacity(0.3),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(5),
                 topRight: Radius.circular(5),
@@ -124,23 +124,23 @@ class _KingsThroneState extends State<KingsThrone> {
     );
   }
 
-  Column buildNameColumn(
+  Column buildNameColumn2(
       String lessonName, Color lessonColor, String nameSurname) {
     return Column(
       children: [
         Container(
           width: shadowBoxWidths,
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.7),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(5),
-              topRight: Radius.circular(5),
-            ),
-            border: Border.all(
-              color: mySecondaryColor,
-              width: 0.8,
-            ),
-          ),
+          // decoration: BoxDecoration(
+          //   color: Colors.black.withOpacity(0.5),
+          //   borderRadius: const BorderRadius.only(
+          //     topLeft: Radius.circular(5),
+          //     topRight: Radius.circular(5),
+          //   ),
+          //   border: Border.all(
+          //     color: mySecondaryColor,
+          //     width: 0.8,
+          //   ),
+          // ),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 22.0),
             child: Column(
@@ -156,36 +156,29 @@ class _KingsThroneState extends State<KingsThrone> {
           ),
         ),
         SizedBox(height: 60.h),
-        buildThrone(lessonColor, lessonName, nameSurname),
+        buildNameColumn(lessonName, lessonColor, nameSurname),
       ],
     );
   }
 
-  Container buildThrone(
-      Color lessonColor, String lessonName, String nameSurname) {
-    return Container(
-      height: 40,
-      width: shadowBoxWidths,
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.7),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(5),
-          topRight: Radius.circular(5),
+  Column buildNameColumn(
+      String lessonName, Color lessonColor, String nameSurname) {
+    return Column(
+      children: [
+        buildCrown(lessonName, lessonColor), SizedBox(height: 10.h),
+        Text(
+          nameSurname,
+          style: myTonicStyle(myIconsColor),
         ),
-        border: Border.all(
-          color: mySecondaryColor,
-          width: 0.8,
-        ),
-      ),
-
-      child: Center(
-        child: Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               net,
-              style: myDigitalStyle(color: mySecondaryTextColor, fontSize: 20),
+              style: myDigitalStyle(
+                  color: darkMode ? mySecondaryTextColor : myTextColor,
+                  fontSize: 20),
             ),
             SizedBox(
               width: 1.w,
@@ -193,10 +186,65 @@ class _KingsThroneState extends State<KingsThrone> {
             Padding(
               padding: const EdgeInsets.only(left: 4.0, bottom: 3.0),
               child: Text(
-                "net ortalaması",
-                style: myTonicStyle(mySecondaryTextColor, fontSize: 9),
+                "net artışı",
+                style: myTonicStyle(
+                    darkMode ? mySecondaryTextColor : myTextColor,
+                    fontSize: 9),
               ),
             ),
+          ],
+        ),
+        SizedBox(height: 20.h),
+        //buildPodium(lessonColor, lessonName),
+      ],
+    );
+  }
+
+  SizedBox buildThrone(
+      Color lessonColor, String lessonName, String nameSurname) {
+    return SizedBox(
+      height: 60.h,
+      width: shadowBoxWidths,
+      // decoration: BoxDecoration(
+      //   color: Colors.black.withOpacity(0.3),
+      //   borderRadius: const BorderRadius.only(
+      //     topLeft: Radius.circular(5),
+      //     topRight: Radius.circular(5),
+      //   ),
+      //   border: Border.all(
+      //     color: mySecondaryColor,
+      //     width: 0.8,
+      //   ),
+      // ),
+
+      child: Center(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  net,
+                  style: myDigitalStyle(
+                      color: darkMode ? mySecondaryTextColor : myTextColor,
+                      fontSize: 20),
+                ),
+                SizedBox(
+                  width: 1.w,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0, bottom: 3.0),
+                  child: Text(
+                    "net ortalaması",
+                    style: myTonicStyle(
+                        darkMode ? mySecondaryTextColor : myTextColor,
+                        fontSize: 9),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
           ],
         ),
       ),

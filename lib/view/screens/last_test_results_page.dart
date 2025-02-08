@@ -18,23 +18,22 @@ import '../widgets/hexagon_chart.dart';
 import '../widgets/multi_line_chart.dart';
 import '../widgets/my_app_bar.dart';
 import '../widgets/my_card_clippers.dart';
-import '../widgets/negatif_multi_line_chart.dart';
 import '../widgets/player_id_card.dart';
 import '../widgets/question_stats.dart';
 import '../widgets/score_chart.dart';
 import '../widgets/skill_card.dart';
 import '../widgets/widget_decorations.dart';
 
-class ChartsPage extends StatefulWidget {
+class LastTestResultsPage extends StatefulWidget {
   final int? playerId;
 
-  const ChartsPage({Key? key, this.playerId}) : super(key: key);
+  const LastTestResultsPage({Key? key, this.playerId}) : super(key: key);
 
   @override
-  ChartsPageState createState() => ChartsPageState();
+  LastTestResultsPageState createState() => LastTestResultsPageState();
 }
 
-class ChartsPageState extends State<ChartsPage>
+class LastTestResultsPageState extends State<LastTestResultsPage>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   bool _showSubSkills = true;
   late Future<Disciple> playerFuture;
@@ -70,6 +69,14 @@ class ChartsPageState extends State<ChartsPage>
   int correct = 14;
   int wrong = 2;
   int empty = 4;
+  int totalHardQuestions = 5;
+  int correctOfHards = 1;
+  int wrongOfHards = 2;
+  int emptyOfHards = 2;
+  int totalEasyQuestions = 6;
+  int correctOfEasy = 3;
+  int wrongOfEasy = 1;
+  int emptyOfEasy = 2;
   int? hoveredSubSkillIndex;
   int? selectedSubSkill;
   Offset _mousePosition = Offset.zero;
@@ -194,9 +201,7 @@ class ChartsPageState extends State<ChartsPage>
       Random random = Random();
       subHeaderActivated = false;
 
-      totalQuestions = 40;
-      correct = random.nextInt(30);
-      wrong = random.nextInt(10);
+      randomizeStatsCardsValues(random);
     });
 
     if (selectedSubSkill == null) {
@@ -206,6 +211,18 @@ class ChartsPageState extends State<ChartsPage>
     _removeIndicatorOverlay();
     _removeOverlay();
     _showOverlay(context, clickedSkillName ?? "Bir Ders Seçin");
+  }
+
+  void randomizeStatsCardsValues(Random random) {
+    totalQuestions = 40;
+    correct = random.nextInt(30);
+    wrong = random.nextInt(10);
+    totalHardQuestions = 5;
+    correctOfHards = random.nextInt(3);
+    wrongOfHards = random.nextInt(2);
+    totalEasyQuestions = 6;
+    correctOfEasy = random.nextInt(3);
+    wrongOfEasy = random.nextInt(2);
   }
 
   void _updateHeaderFromMultiLine(
@@ -221,9 +238,7 @@ class ChartsPageState extends State<ChartsPage>
       }
       Random random = Random();
       subHeaderActivated = false;
-      totalQuestions = 40;
-      correct = random.nextInt(30);
-      wrong = random.nextInt(10);
+      randomizeStatsCardsValues(random);
     });
 
     if (clickedSkillName?.toLowerCase() == "total") {
@@ -232,7 +247,6 @@ class ChartsPageState extends State<ChartsPage>
       _updateSubStats(clickedSkillId!);
     }
     _removeIndicatorOverlay();
-
     _removeOverlay();
 
     _showOverlay(context, clickedSkillName ?? "Bir Ders Seçin");
@@ -248,9 +262,7 @@ class ChartsPageState extends State<ChartsPage>
       }
       Random random = Random();
       subHeaderActivated = true;
-      totalQuestions = 40;
-      correct = random.nextInt(30);
-      wrong = random.nextInt(10);
+      randomizeStatsCardsValues(random);
     });
     _updateSingleLineChart();
     _removeOverlay();
@@ -461,7 +473,7 @@ class ChartsPageState extends State<ChartsPage>
 
     // height lengths
     double columnHeight = 630.h;
-    double singleLineChartHeight = isMobile(context) ? 180.h : 150.h;
+    double singleLineChartHeight = 150.h;
     double multiLineHeight = isMobile(context)
         ? singleLineChartHeight * 2 + 50.h
         : columnHeight - (singleLineChartHeight + verticalSpace);
@@ -573,28 +585,6 @@ class ChartsPageState extends State<ChartsPage>
                                                 ),
                                                 child: Column(
                                                   children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 0.w,
-                                                          right: 10.w,
-                                                          bottom: 20.h),
-                                                      child: SizedBox(
-                                                        height: 20.h,
-                                                        width:
-                                                            mobileContainerWidths,
-                                                        child: Center(
-                                                          child: Text(
-                                                            "son 5 denemenin puan ortalamaları",
-                                                            style:
-                                                                myThightStyle(
-                                                              color:
-                                                                  myTextColor,
-                                                              fontSize: 10,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
                                                     FutureBuilder<List<Score>>(
                                                       key:
                                                           subStatsFutureResetterKey,
@@ -876,7 +866,7 @@ class ChartsPageState extends State<ChartsPage>
                                                           textColors:
                                                               myTextColor,
                                                           name:
-                                                              "güçlü konular"),
+                                                              "en yüksek puanlı konular"),
                                                     ),
                                                     Padding(
                                                       padding:
@@ -1043,7 +1033,7 @@ class ChartsPageState extends State<ChartsPage>
                                                           textColors:
                                                               myTextColor,
                                                           name:
-                                                              "zayıf konular"),
+                                                              "en düşük puanlı konular"),
                                                     ),
                                                     Padding(
                                                       padding:
@@ -1202,8 +1192,8 @@ class ChartsPageState extends State<ChartsPage>
                                                     buildVerticalSpacer(),
                                                     Padding(
                                                       padding: EdgeInsets.only(
-                                                          left: 5.w,
-                                                          right: 5.w,
+                                                          left: 0.w,
+                                                          right: 10.w,
                                                           bottom: 0.h),
                                                       child: SizedBox(
                                                         height: 20.h,
@@ -1211,7 +1201,7 @@ class ChartsPageState extends State<ChartsPage>
                                                             mobileContainerWidths,
                                                         child: Center(
                                                           child: Text(
-                                                            "Güçlü ve zayıf konular son 5 denemedeki istatistiklere göre hesaplanmaktadır.",
+                                                            "Son denemedeki istatistiklere göre",
                                                             style:
                                                                 myThightStyle(
                                                               color:
@@ -1234,813 +1224,262 @@ class ChartsPageState extends State<ChartsPage>
                               Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // DeepLine
-                                  Container(
-                                    color: myPrimaryColor,
-                                    width: mobileContainerWidths +
-                                        (2 * sidePaddings),
-                                    height: multiLineHeight + 0.1,
-                                    alignment: Alignment.bottomCenter,
-                                    child: FutureBuilder(
-                                      future: multiScoresFuture,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}'));
-                                        } else if (snapshot.hasData) {
-                                          final multiScoresData = snapshot.data;
-
-                                          return Container(
-                                            alignment: Alignment.bottomCenter,
-                                            child: FittedBox(
-                                              child: DeepLineChart(
-                                                showTags: false,
-                                                lineChart: false,
-                                                scoreMap: multiScoresData!,
-                                                callbackFunct:
-                                                    _updateHeaderFromMultiLine,
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          return const Center(
-                                              child: Text('Player not found.'));
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  // multiLine2
-                                  if (!subHeaderActivated)
-                                    Container(
-                                      color: Colors.transparent,
-                                      width: mobileContainerWidths +
-                                          (2 * sidePaddings),
-                                      // height: multiLineHeight / 3 * 2 + 0.1,
-                                      alignment: Alignment.bottomCenter,
-                                      child: FutureBuilder(
-                                        future: multiScoresFuture,
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return const Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          } else if (snapshot.hasError) {
-                                            return Center(
-                                                child: Text(
-                                                    'Error: ${snapshot.error}'));
-                                          } else if (snapshot.hasData) {
-                                            final multiScoresData =
-                                                snapshot.data;
-
-                                            return Container(
-                                              alignment: Alignment.bottomCenter,
-                                              child: FittedBox(
-                                                child: DeepLineChart(
-                                                  lineChart: true,
-                                                  showTags: false,
-                                                  scoreMap: multiScoresData!,
-                                                  callbackFunct:
-                                                      _updateHeaderFromMultiLine,
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            return const Center(
-                                                child:
-                                                    Text('Player not found.'));
-                                          }
-                                        },
-                                      ),
-                                    ),
                                   buildVerticalSpacer(),
                                   buildVerticalSpacer(),
                                   buildVerticalSpacer(),
-                                  // SingleLine Chart (puan)
+                                  // ScoreExplanation
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: singleLineChartHeight * 2,
+                                    height: miniBoxHeights,
                                     decoration: buildBorderDecoration(),
-                                    child: FutureBuilder(
-                                      future: scoresFuture,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}'));
-                                        } else if (snapshot.hasData) {
-                                          final scoresData =
-                                              snapshot.data as List<Score>;
-                                          return Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: 40.h, bottom: 0.h),
-                                                child: SizedBox(
-                                                  width: mobileContainerWidths,
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          SizedBox(
-                                                            height: 58.h,
-                                                            width: 80
-                                                                .w, // elemanların uzunluğunun toplamı
-                                                            child: Center(
-                                                              child: FittedBox(
-                                                                child: Text(
-                                                                  "71",
-                                                                  style: myDigitalStyle(
-                                                                      color:
-                                                                          mySecondaryTextColor,
-                                                                      fontSize:
-                                                                          32),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 50.w,
-                                                            height: 30.h,
-                                                            child: FittedBox(
-                                                              child: Text(
-                                                                // ${capitalize((headersLabel ?? "total").toLowerCase())}
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                "son 5 denemedeki\npuan  ortalaması",
-                                                                style:
-                                                                    myThightStyle(
-                                                                  color:
-                                                                      mySecondaryTextColor,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      buildLateralSpacer(),
-                                                      buildLateralSpacer(),
-                                                      buildLateralSpacer(),
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Container(
-                                                            height: 50.h,
-                                                            width: 50
-                                                                .w, // elemanların uzunluğunun toplamı
-                                                            decoration: const BoxDecoration(
-                                                                border: BorderDirectional(
-                                                                    bottom: BorderSide(
-                                                                        color:
-                                                                            myIconsColor))),
-                                                            child: Center(
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .end,
-                                                                children: [
-                                                                  SizedBox(
-                                                                    width: 20.w,
-                                                                    child:
-                                                                        FittedBox(
-                                                                      child:
-                                                                          Text(
-                                                                        "4.8",
-                                                                        style: myDigitalStyle(
-                                                                            color:
-                                                                                mySecondaryTextColor,
-                                                                            fontSize:
-                                                                                32),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 3.w,
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 16.w,
-                                                                    child:
-                                                                        const FittedBox(
-                                                                      child:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .upgrade_outlined,
-                                                                        color:
-                                                                            myIconsColor,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 10.h,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 60.w,
-                                                            height: 25.h,
-                                                            child: FittedBox(
-                                                              child: Text(
-                                                                // ${capitalize((headersLabel ?? "total").toLowerCase())} puanlarının \n
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-
-                                                                "ortalama \n artış miktarı",
-                                                                style:
-                                                                    myThightStyle(
-                                                                  color:
-                                                                      mySecondaryTextColor,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        CardNameText(
+                                            textColors: mySecondaryTextColor,
+                                            name:
+                                                "${(headersLabel ?? "total")} Puan Analizi"),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            buildVerticalSpacer(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: Text(
+                                                    textAlign: TextAlign.end,
+                                                    "zorluk :   ",
+                                                    style: myThightStyle(
+                                                        color:
+                                                            mySecondaryTextColor),
                                                   ),
                                                 ),
-                                              ),
-                                              Divider(
-                                                color: myPrimaryColor,
-                                                thickness: 0.5,
-                                                indent: 50.w,
-                                                endIndent: 50.w,
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(
-                                                      // height: 25.h,
-                                                      child: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.fitHeight,
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 10.h),
-                                                            child: Text(
-                                                              "Tüm denemelerdeki ${(headersLabel ?? "total").toLowerCase()} puanları",
-                                                              style:
-                                                                  myThightStyle(
-                                                                color:
-                                                                    mySecondaryTextColor,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    ShaderMask(
-                                                      shaderCallback:
-                                                          (bounds) =>
-                                                              LinearGradient(
-                                                        begin: Alignment
-                                                            .centerLeft,
-                                                        end: Alignment
-                                                            .centerRight,
-                                                        colors: [
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(1),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                        ],
-                                                        stops: const [
-                                                          0.0,
-                                                          0.05,
-                                                          0.5,
-                                                          0.95,
-                                                          1
-                                                        ],
-                                                      ).createShader(bounds),
-                                                      child:
-                                                          SingleChildScrollView(
-                                                        physics:
-                                                            const BouncingScrollPhysics(),
-                                                        padding: isMobile(
-                                                                context)
-                                                            ? EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 50.w,
-                                                                    end: 50.w,
-                                                                    top: 5,
-                                                                    bottom: 18)
-                                                            : EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 5.w,
-                                                                    end: 25.w,
-                                                                    top: 0,
-                                                                    bottom: 18),
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            top: 5.h,
-                                                          ),
-                                                          child: SizedBox(
-                                                            width:
-                                                                chartWidthCalculator(
-                                                                    scoresData
-                                                                        .length),
-                                                            height: 90.h,
-                                                            child: ScoreChart(
-                                                                scores:
-                                                                    scoresData),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
+                                                SizedBox(
+                                                  width: 2.w,
                                                 ),
-                                              ),
-                                            ],
-                                          );
-                                        } else {
-                                          return const Center(
-                                              child: Text('Player not found.'));
-                                        }
-                                      },
-                                    ),
-                                  ),
-
-                                  buildVerticalSpacer(),
-                                  // MultiLine Chart
-                                  Container(
-                                    width: mobileContainerWidths,
-                                    height: multiLineHeight,
-                                    decoration: buildBorderDecoration(),
-                                    child: FutureBuilder(
-                                      future: multiScoresFuture,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}'));
-                                        } else if (snapshot.hasData) {
-                                          final multiScoresData = snapshot.data;
-
-                                          return Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 20.w,
-                                                top: 50,
-                                                bottom: 50,
-                                                right: 20.w),
-                                            child: FittedBox(
-                                              child: DifficultyMultiChart(
-                                                // düzgün çalışmıyor
-                                                showTags: true,
-                                                showNegative: true,
-                                                scoreMap: {
-                                                  "Doğru": [
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 99),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 69),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 79),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 29),
-                                                  ],
-                                                  "Yanlış": [
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 59),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 39),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 19),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 29),
-                                                  ],
-                                                  "Boş": [
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 59),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 69),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 12),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 79),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 59),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 69),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 12),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 79),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 59),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 69),
-                                                  ],
-                                                  "Zorluk": [
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 32),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 69),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: 12),
-                                                    Score(
-                                                        name: "name",
-                                                        discipleID: 8,
-                                                        skillID: 2,
-                                                        score: -15),
-                                                  ],
-                                                },
-                                                callbackFunct:
-                                                    _updateHeaderFromMultiLine,
+                                                Text(
+                                                  "+9.2",
+                                                  style: myDigitalStyle(
+                                                      color:
+                                                          mySecondaryTextColor,
+                                                      fontSize: 22),
+                                                ),
+                                                buildLateralSpacer(),
+                                                buildLateralSpacer(),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: Text(
+                                                    textAlign: TextAlign.end,
+                                                    "sıralama :   ",
+                                                    style: myThightStyle(
+                                                        color:
+                                                            mySecondaryTextColor),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 2.w,
+                                                ),
+                                                Text(
+                                                  "22.",
+                                                  style: myDigitalStyle(
+                                                      color:
+                                                          mySecondaryTextColor,
+                                                      fontSize: 22),
+                                                ),
+                                              ],
+                                            ),
+                                            buildVerticalSpacer(),
+                                            buildVerticalSpacer(),
+                                            SizedBox(
+                                              // width: indicatorHeight,
+                                              // height: miniBoxHeights - 52.h,
+                                              child: QuestionStatsCard(
+                                                totalQuestions: totalQuestions,
+                                                correct: correct,
+                                                wrong: wrong,
+                                                empty: totalQuestions -
+                                                    (correct + wrong),
                                               ),
                                             ),
-                                          );
-                                        } else {
-                                          return const Center(
-                                              child: Text('Player not found.'));
-                                        }
-                                      },
+                                            // buildVerticalSpacer(),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   buildVerticalSpacer(),
-                                  // SingleLine Chart (net)
+                                  // HardQuestionsResponse
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: singleLineChartHeight,
+                                    height: miniBoxHeights,
                                     decoration: buildBorderDecoration(),
-                                    child: FutureBuilder(
-                                      future: scoresFuture,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}'));
-                                        } else if (snapshot.hasData) {
-                                          final scoresData =
-                                              snapshot.data as List<Score>;
-                                          return Column(
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(
-                                                      // height: 25.h,
-                                                      child: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.fitHeight,
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 10.h),
-                                                            child: Text(
-                                                              "Tüm denemelerdeki ${(headersLabel ?? "total").toLowerCase()} netleri ve diğer öğrencilerin net ortalaması",
-                                                              style:
-                                                                  myThightStyle(
-                                                                color:
-                                                                    mySecondaryTextColor,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    ShaderMask(
-                                                      shaderCallback:
-                                                          (bounds) =>
-                                                              LinearGradient(
-                                                        begin: Alignment
-                                                            .centerLeft,
-                                                        end: Alignment
-                                                            .centerRight,
-                                                        colors: [
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(1),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                        ],
-                                                        stops: const [
-                                                          0.0,
-                                                          0.05,
-                                                          0.5,
-                                                          0.95,
-                                                          1
-                                                        ],
-                                                      ).createShader(bounds),
-                                                      child:
-                                                          SingleChildScrollView(
-                                                        physics:
-                                                            const BouncingScrollPhysics(),
-                                                        padding: isMobile(
-                                                                context)
-                                                            ? EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 50.w,
-                                                                    end: 50.w,
-                                                                    top: 5,
-                                                                    bottom: 18)
-                                                            : EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 5.w,
-                                                                    end: 25.w,
-                                                                    top: 0,
-                                                                    bottom: 18),
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            top: 5.h,
-                                                          ),
-                                                          child: SizedBox(
-                                                            width:
-                                                                chartWidthCalculator(
-                                                                    scoresData
-                                                                        .length),
-                                                            height: 90.h,
-                                                            child: ScoreChart(
-                                                              scores:
-                                                                  randomizeScores(
-                                                                      scoresData),
-                                                              scores2:
-                                                                  randomizeScores(
-                                                                      scoresData),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        CardNameText(
+                                            textColors: mySecondaryTextColor,
+                                            name:
+                                                "${(headersLabel ?? "total")} zor sorularındaki istatistikler"),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            buildVerticalSpacer(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                buildLateralSpacer(),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: Text(
+                                                    textAlign: TextAlign.end,
+                                                    "zor soru sayısı :   ",
+                                                    style: myThightStyle(
+                                                        color:
+                                                            mySecondaryTextColor),
+                                                  ),
                                                 ),
+                                                SizedBox(
+                                                  width: 2.w,
+                                                ),
+                                                Text(
+                                                  totalHardQuestions.toString(),
+                                                  style: myDigitalStyle(
+                                                      color:
+                                                          mySecondaryTextColor,
+                                                      fontSize: 22),
+                                                ),
+                                              ],
+                                            ),
+                                            buildVerticalSpacer(),
+                                            buildVerticalSpacer(),
+                                            SizedBox(
+                                              // width: indicatorHeight,
+                                              // height: miniBoxHeights - 52.h,
+                                              child: QuestionStatsCard(
+                                                totalQuestions:
+                                                    totalHardQuestions,
+                                                correct: correctOfHards,
+                                                wrong: wrongOfHards,
+                                                empty: totalHardQuestions -
+                                                    (correctOfHards +
+                                                        wrongOfHards),
                                               ),
-                                            ],
-                                          );
-                                        } else {
-                                          return const Center(
-                                              child: Text('Player not found.'));
-                                        }
-                                      },
+                                            ),
+                                            // buildVerticalSpacer(),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                  // EasyQuestionsResponse
                                   buildVerticalSpacer(),
-                                  // SingleLine Chart (sıralama)
+
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: singleLineChartHeight,
+                                    height: miniBoxHeights,
                                     decoration: buildBorderDecoration(),
-                                    child: FutureBuilder(
-                                      future: scoresFuture,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}'));
-                                        } else if (snapshot.hasData) {
-                                          final scoresData =
-                                              snapshot.data as List<Score>;
-                                          return Column(
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(
-                                                      // height: 25.h,
-                                                      child: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.fitHeight,
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 15.h),
-                                                            child: Text(
-                                                              "Tüm denemelerdeki ${(headersLabel ?? "total").toLowerCase()} sıralamaları",
-                                                              style:
-                                                                  myThightStyle(
-                                                                color:
-                                                                    mySecondaryTextColor,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    ShaderMask(
-                                                      shaderCallback:
-                                                          (bounds) =>
-                                                              LinearGradient(
-                                                        begin: Alignment
-                                                            .centerLeft,
-                                                        end: Alignment
-                                                            .centerRight,
-                                                        colors: [
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(1),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                        ],
-                                                        stops: const [
-                                                          0.0,
-                                                          0.05,
-                                                          0.5,
-                                                          0.95,
-                                                          1
-                                                        ],
-                                                      ).createShader(bounds),
-                                                      child:
-                                                          SingleChildScrollView(
-                                                        physics:
-                                                            const BouncingScrollPhysics(),
-                                                        padding: isMobile(
-                                                                context)
-                                                            ? EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 50.w,
-                                                                    end: 50.w,
-                                                                    top: 5,
-                                                                    bottom: 18)
-                                                            : EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 5.w,
-                                                                    end: 25.w,
-                                                                    top: 0,
-                                                                    bottom: 18),
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            top: 5.h,
-                                                          ),
-                                                          child: SizedBox(
-                                                            width:
-                                                                chartWidthCalculator(
-                                                                    scoresData
-                                                                        .length),
-                                                            height: 90.h,
-                                                            child: ScoreChart(
-                                                                decrease: true,
-                                                                scores: randomizeScores(
-                                                                    scoresData)),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        CardNameText(
+                                            textColors: mySecondaryTextColor,
+                                            name:
+                                                "${(headersLabel ?? "total")} kolay  sorularındaki istatistikler"),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            buildVerticalSpacer(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                buildLateralSpacer(),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: Text(
+                                                    textAlign: TextAlign.end,
+                                                    "kolay soru sayısı :   ",
+                                                    style: myThightStyle(
+                                                        color:
+                                                            mySecondaryTextColor),
+                                                  ),
                                                 ),
+                                                SizedBox(
+                                                  width: 2.w,
+                                                ),
+                                                Text(
+                                                  totalEasyQuestions.toString(),
+                                                  style: myDigitalStyle(
+                                                      color:
+                                                          mySecondaryTextColor,
+                                                      fontSize: 22),
+                                                ),
+                                              ],
+                                            ),
+                                            buildVerticalSpacer(),
+                                            buildVerticalSpacer(),
+                                            SizedBox(
+                                              // width: indicatorHeight,
+                                              // height: miniBoxHeights - 52.h,
+                                              child: QuestionStatsCard(
+                                                totalQuestions:
+                                                    totalEasyQuestions,
+                                                correct: correctOfEasy,
+                                                wrong: wrongOfEasy,
+                                                empty: totalEasyQuestions -
+                                                    (correctOfEasy +
+                                                        wrongOfEasy),
                                               ),
-                                            ],
-                                          );
-                                        } else {
-                                          return const Center(
-                                              child: Text('Player not found.'));
-                                        }
-                                      },
+                                            ),
+                                            // buildVerticalSpacer(),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
 
@@ -2237,75 +1676,397 @@ class ChartsPageState extends State<ChartsPage>
                                 children: [
                                   buildVerticalSpacer(),
 
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          // Ana Beceri Başlığı
-                                          Container(
-                                            width: indicatorHeight,
-                                            height: headerHeight,
-                                            decoration: buildBorderDecoration(),
-                                            child: Container(
-                                              decoration:
-                                                  buildSelectedDecoration(
-                                                      isMobile(context)),
-                                              margin: EdgeInsetsDirectional
-                                                  .symmetric(
-                                                      vertical: 25.h,
-                                                      horizontal: 50.h),
-                                              padding: EdgeInsetsDirectional
-                                                  .symmetric(
-                                                      vertical: 15.h,
-                                                      horizontal: 20.h),
-                                              child: FittedBox(
+                                  // SingleLine Chart
+                                  Container(
+                                    width: secondColumnWidth,
+                                    height: singleLineChartHeight,
+                                    decoration: buildBorderDecoration(),
+                                    child: FutureBuilder(
+                                      future: scoresFuture,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        } else if (snapshot.hasError) {
+                                          return Center(
+                                              child: Text(
+                                                  'Error: ${snapshot.error}'));
+                                        } else if (snapshot.hasData) {
+                                          final scoresData =
+                                              snapshot.data as List<Score>;
+                                          return Row(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 16.w, right: 8.w),
+                                                child: SizedBox(
+                                                  width: secondColumnWidth / 7,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        width:
+                                                            secondColumnWidth /
+                                                                7,
+                                                        decoration: const BoxDecoration(
+                                                            border: BorderDirectional(
+                                                                bottom: BorderSide(
+                                                                    color:
+                                                                        myAccentColor))),
+                                                        child: Center(
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 8.w,
+                                                                child:
+                                                                    FittedBox(
+                                                                  child: Text(
+                                                                    "4.8",
+                                                                    style: myDigitalStyle(
+                                                                        color:
+                                                                            mySecondaryTextColor,
+                                                                        fontSize:
+                                                                            32),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 1.w,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 6.w,
+                                                                child:
+                                                                    const FittedBox(
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .upgrade_outlined,
+                                                                    color:
+                                                                        myAccentColor,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10.h,
+                                                      ),
+                                                      FittedBox(
+                                                        child: Text(
+                                                          "${capitalize((headersLabel ?? "total").toLowerCase())} puanlarının \n ortalama artış miktarı",
+                                                          style: myThightStyle(
+                                                            color:
+                                                                mySecondaryTextColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
                                                 child: Column(
                                                   children: [
-                                                    Text(
-                                                      headersStatValue != null
-                                                          ? headersStatValue
-                                                              .toString()
-                                                          : "",
-                                                      style: myDigitalStyle(
-                                                          color:
-                                                              mySecondaryTextColor,
-                                                          fontSize: 16),
+                                                    SizedBox(
+                                                      height: 25.h,
+                                                      child: Align(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        child: FittedBox(
+                                                          fit: BoxFit.fitHeight,
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 15.h),
+                                                            child: Text(
+                                                              "Tüm denemelerdeki ${(headersLabel ?? "total").toLowerCase()} puanları",
+                                                              style:
+                                                                  myThightStyle(
+                                                                color:
+                                                                    mySecondaryTextColor,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
-                                                    Text(
-                                                      headersLabel ??
-                                                          "Bir ders seçin.",
-                                                      style: myTonicStyle(
-                                                          mySecondaryTextColor),
+                                                    ShaderMask(
+                                                      shaderCallback:
+                                                          (bounds) =>
+                                                              LinearGradient(
+                                                        begin: Alignment
+                                                            .centerLeft,
+                                                        end: Alignment
+                                                            .centerRight,
+                                                        colors: [
+                                                          Colors.white
+                                                              .withOpacity(
+                                                                  0.35),
+                                                          Colors.white
+                                                              .withOpacity(0.7),
+                                                          Colors.white
+                                                              .withOpacity(1),
+                                                          Colors.white
+                                                              .withOpacity(0.7),
+                                                          Colors.white
+                                                              .withOpacity(
+                                                                  0.35),
+                                                        ],
+                                                        stops: const [
+                                                          0.0,
+                                                          0.05,
+                                                          0.5,
+                                                          0.95,
+                                                          1
+                                                        ],
+                                                      ).createShader(bounds),
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        physics:
+                                                            const BouncingScrollPhysics(),
+                                                        padding: isMobile(
+                                                                context)
+                                                            ? EdgeInsetsDirectional
+                                                                .only(
+                                                                    start: 50.w,
+                                                                    end: 75.w,
+                                                                    top: 5,
+                                                                    bottom: 18)
+                                                            : EdgeInsetsDirectional
+                                                                .only(
+                                                                    start: 5.w,
+                                                                    end: 25.w,
+                                                                    top: 0,
+                                                                    bottom: 18),
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                            top: 5.h,
+                                                          ),
+                                                          child: SizedBox(
+                                                            width:
+                                                                chartWidthCalculator(
+                                                                    scoresData
+                                                                        .length),
+                                                            height: 90.h,
+                                                            child: ScoreChart(
+                                                                scores:
+                                                                    scoresData),
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                          buildVerticalSpacer(),
-                                          // StatsIndicator
-                                          Container(
-                                            width:
-                                                indicatorHeight, // yükseklik ile eşit olmak zorunda.
-                                            height: indicatorHeight,
-                                            decoration: buildBorderDecoration(),
-                                            child: Container(
-                                              decoration: const BoxDecoration(
-                                                color: Colors
-                                                    .transparent, // Dairenin iç rengi
-                                                shape: BoxShape
-                                                    .circle, // Daire şekli
-                                              ),
-                                              //margin: const EdgeInsetsDirectional.all(60),
-                                              child:
-                                                  buildFutureStatsIndicator(),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      // SubStats
+                                            ],
+                                          );
+                                        } else {
+                                          return const Center(
+                                              child: Text('Player not found.'));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  buildVerticalSpacer(),
 
-                                      buildLateralSpacer(),
+                                  // MultiLine Chart
+                                  Container(
+                                    width: secondColumnWidth,
+                                    height: multiLineHeight,
+                                    decoration: buildBorderDecoration(),
+                                    child: FutureBuilder(
+                                      future: multiScoresFuture,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        } else if (snapshot.hasError) {
+                                          return Center(
+                                              child: Text(
+                                                  'Error: ${snapshot.error}'));
+                                        } else if (snapshot.hasData) {
+                                          final multiScoresData = snapshot.data;
+
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20,
+                                                top: 50,
+                                                bottom: 50,
+                                                right: 20),
+                                            child: FittedBox(
+                                              child: MultiLineScoreChart(
+                                                showTags: true,
+                                                scoreMap: multiScoresData!,
+                                                callbackFunct:
+                                                    _updateHeaderFromMultiLine,
+                                                // scoreMap: {
+                                                //   "Türkçe": [
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 99),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 69),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 79),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 29),
+                                                //   ],
+                                                //   "Matematik": [
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 59),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 39),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 19),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 29),
+                                                //   ],
+                                                //   "Fizik": [
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 59),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 69),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 12),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 79),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 59),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 69),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 12),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 79),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 59),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 69),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 12),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 79),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 59),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 69),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 12),
+                                                //     Score(
+                                                //         name: "name",
+                                                //         discipleID: 8,
+                                                //         skillID: 2,
+                                                //         score: 79),
+                                                //   ],
+                                                // },
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          return const Center(
+                                              child: Text('Player not found.'));
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  buildSpacer(),
+                                ],
+                              ),
+                              buildLateralSpacer(),
+                              Column(
+                                children: [
+                                  buildVerticalSpacer(),
+
+                                  Row(
+                                    children: [
+                                      // SubStats
                                       Container(
                                         width: subStatsWidth,
                                         height: subStatsHeight,
@@ -2844,6 +2605,72 @@ class ChartsPageState extends State<ChartsPage>
                                           ),
                                         ),
                                       ),
+
+                                      buildLateralSpacer(),
+                                      Column(
+                                        children: [
+                                          // Ana Beceri Başlığı
+                                          Container(
+                                            width: indicatorHeight,
+                                            height: headerHeight,
+                                            decoration: buildBorderDecoration(),
+                                            child: Container(
+                                              decoration:
+                                                  buildSelectedDecoration(
+                                                      isMobile(context)),
+                                              margin: EdgeInsetsDirectional
+                                                  .symmetric(
+                                                      vertical: 25.h,
+                                                      horizontal: 50.h),
+                                              padding: EdgeInsetsDirectional
+                                                  .symmetric(
+                                                      vertical: 15.h,
+                                                      horizontal: 20.h),
+                                              child: FittedBox(
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      headersStatValue != null
+                                                          ? headersStatValue
+                                                              .toString()
+                                                          : "",
+                                                      style: myDigitalStyle(
+                                                          color:
+                                                              mySecondaryTextColor,
+                                                          fontSize: 16),
+                                                    ),
+                                                    Text(
+                                                      headersLabel ??
+                                                          "Bir ders seçin.",
+                                                      style: myTonicStyle(
+                                                          mySecondaryTextColor),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          buildVerticalSpacer(),
+                                          // StatsIndicator
+                                          Container(
+                                            width:
+                                                indicatorHeight, // yükseklik ile eşit olmak zorunda.
+                                            height: indicatorHeight,
+                                            decoration: buildBorderDecoration(),
+                                            child: Container(
+                                              decoration: const BoxDecoration(
+                                                color: Colors
+                                                    .transparent, // Dairenin iç rengi
+                                                shape: BoxShape
+                                                    .circle, // Daire şekli
+                                              ),
+                                              //margin: const EdgeInsetsDirectional.all(60),
+                                              child:
+                                                  buildFutureStatsIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                   buildVerticalSpacer(),
@@ -2923,394 +2750,6 @@ class ChartsPageState extends State<ChartsPage>
                                   buildSpacer(),
                                 ],
                               ),
-                              buildLateralSpacer(),
-                              Column(
-                                children: [
-                                  buildVerticalSpacer(),
-
-                                  // SingleLine Chart
-                                  Container(
-                                    width: secondColumnWidth,
-                                    height: singleLineChartHeight,
-                                    decoration: buildBorderDecoration(),
-                                    child: FutureBuilder(
-                                      future: scoresFuture,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}'));
-                                        } else if (snapshot.hasData) {
-                                          final scoresData =
-                                              snapshot.data as List<Score>;
-                                          return Row(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 16.w, right: 8.w),
-                                                child: SizedBox(
-                                                  width: secondColumnWidth / 7,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Container(
-                                                        width:
-                                                            secondColumnWidth /
-                                                                7,
-                                                        decoration: const BoxDecoration(
-                                                            border: BorderDirectional(
-                                                                bottom: BorderSide(
-                                                                    color:
-                                                                        myAccentColor))),
-                                                        child: Center(
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .end,
-                                                            children: [
-                                                              SizedBox(
-                                                                width: 8.w,
-                                                                child:
-                                                                    FittedBox(
-                                                                  child: Text(
-                                                                    "4.8",
-                                                                    style: myDigitalStyle(
-                                                                        color:
-                                                                            mySecondaryTextColor,
-                                                                        fontSize:
-                                                                            32),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 1.w,
-                                                              ),
-                                                              SizedBox(
-                                                                width: 6.w,
-                                                                child:
-                                                                    const FittedBox(
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .upgrade_outlined,
-                                                                    color:
-                                                                        myAccentColor,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10.h,
-                                                      ),
-                                                      FittedBox(
-                                                        child: Text(
-                                                          "${capitalize((headersLabel ?? "total").toLowerCase())} puanlarının \n ortalama artış miktarı",
-                                                          style: myThightStyle(
-                                                            color:
-                                                                mySecondaryTextColor,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 25.h,
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.fitHeight,
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 15.h),
-                                                            child: Text(
-                                                              "Tüm denemelerdeki ${(headersLabel ?? "total").toLowerCase()} puanları",
-                                                              style:
-                                                                  myThightStyle(
-                                                                color:
-                                                                    mySecondaryTextColor,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    ShaderMask(
-                                                      shaderCallback:
-                                                          (bounds) =>
-                                                              LinearGradient(
-                                                        begin: Alignment
-                                                            .centerLeft,
-                                                        end: Alignment
-                                                            .centerRight,
-                                                        colors: [
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(1),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                        ],
-                                                        stops: const [
-                                                          0.0,
-                                                          0.05,
-                                                          0.5,
-                                                          0.95,
-                                                          1
-                                                        ],
-                                                      ).createShader(bounds),
-                                                      child:
-                                                          SingleChildScrollView(
-                                                        physics:
-                                                            const BouncingScrollPhysics(),
-                                                        padding: isMobile(
-                                                                context)
-                                                            ? EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 50.w,
-                                                                    end: 75.w,
-                                                                    top: 5,
-                                                                    bottom: 18)
-                                                            : EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 5.w,
-                                                                    end: 25.w,
-                                                                    top: 0,
-                                                                    bottom: 18),
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            top: 5.h,
-                                                          ),
-                                                          child: SizedBox(
-                                                            width:
-                                                                chartWidthCalculator(
-                                                                    scoresData
-                                                                        .length),
-                                                            height: 90.h,
-                                                            child: ScoreChart(
-                                                                scores:
-                                                                    scoresData),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        } else {
-                                          return const Center(
-                                              child: Text('Player not found.'));
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  buildVerticalSpacer(),
-
-                                  // MultiLine Chart
-                                  Container(
-                                    width: secondColumnWidth,
-                                    height: multiLineHeight,
-                                    decoration: buildBorderDecoration(),
-                                    child: FutureBuilder(
-                                      future: multiScoresFuture,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}'));
-                                        } else if (snapshot.hasData) {
-                                          final multiScoresData = snapshot.data;
-
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 20,
-                                                top: 50,
-                                                bottom: 50,
-                                                right: 20),
-                                            child: FittedBox(
-                                              child: MultiLineScoreChart(
-                                                showTags: true,
-                                                scoreMap: multiScoresData!,
-                                                callbackFunct:
-                                                    _updateHeaderFromMultiLine,
-                                                // scoreMap: {
-                                                //   "Türkçe": [
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 99),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 29),
-                                                //   ],
-                                                //   "Matematik": [
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 39),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 19),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 29),
-                                                //   ],
-                                                //   "Fizik": [
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 12),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 12),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 12),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 12),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //   ],
-                                                // },
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          return const Center(
-                                              child: Text('Player not found.'));
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  buildSpacer(),
-                                ],
-                              ),
                               buildSpacer(),
                             ],
                           ),
@@ -3322,15 +2761,6 @@ class ChartsPageState extends State<ChartsPage>
         );
       },
     );
-  }
-
-  List<Score> randomizeScores(List<Score> scores) {
-    Random random = Random();
-    return scores.map((score) {
-      int variation =
-          random.nextInt(20) - random.nextInt(40); // -5 ile +5 arasında değişim
-      return score.copyWith(score: (score.score + variation).clamp(0, 99));
-    }).toList();
   }
 
   Container buildVerticalSpacer() {

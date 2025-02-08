@@ -7,8 +7,16 @@ import '../../model/score.dart';
 class ScoreChart extends StatefulWidget {
   final List<Score> scores;
   final bool showTags;
+  final bool decrease;
+  final List<Score>? scores2; // İkinci skor listesi
 
-  const ScoreChart({super.key, required this.scores, this.showTags = true});
+  const ScoreChart({
+    super.key,
+    required this.scores,
+    this.scores2,
+    this.showTags = true,
+    this.decrease = false,
+  });
 
   @override
   ScoreChartState createState() => ScoreChartState();
@@ -48,8 +56,8 @@ class ScoreChartState extends State<ScoreChart>
           padding: const EdgeInsets.only(right: 15),
           child: CustomPaint(
             size: const Size(double.infinity, 300),
-            painter: ScoreChartPainter(
-                widget.scores, widget.showTags, _animation.value),
+            painter: ScoreChartPainter(widget.scores, widget.scores2,
+                widget.showTags, _animation.value, widget.decrease),
           ),
         );
       },
@@ -60,9 +68,13 @@ class ScoreChartState extends State<ScoreChart>
 class ScoreChartPainter extends CustomPainter {
   final List<Score> scores;
   final bool showTags;
+  final List<Score>? scores2;
+
+  final bool decrease;
   final double animationValue;
 
-  ScoreChartPainter(this.scores, this.showTags, this.animationValue);
+  ScoreChartPainter(this.scores, this.scores2, this.showTags,
+      this.animationValue, this.decrease);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -127,7 +139,9 @@ class ScoreChartPainter extends CustomPainter {
         // Etiketler, animasyon sonunda gösteriliyor
         TextSpan span = TextSpan(
           style: myDigitalStyle(color: mySecondaryTextColor, fontSize: 10),
-          text: scores[i].score.toString(),
+          text: decrease
+              ? (100 - scores[i].score).toString()
+              : scores[i].score.toString(),
         );
         TextPainter tp = TextPainter(
           text: span,
@@ -137,6 +151,24 @@ class ScoreChartPainter extends CustomPainter {
         tp.layout();
         tp.paint(canvas, Offset(x - tp.width / 2, y - tp.height - 5));
       }
+    }
+    Paint paint2 = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke;
+
+    // İkinci skor çizgisi (varsa)
+    if (scores2 != null && scores2!.isNotEmpty) {
+      Path path2 = Path();
+      path2.moveTo(margin,
+          size.height - scores2![0].score * columnHeight * animationValue);
+      for (int i = 1; i < scores2!.length; i++) {
+        double x = margin + columnWidth * i;
+        double y =
+            size.height - scores2![i].score * columnHeight * animationValue;
+        path2.lineTo(x, y);
+      }
+      canvas.drawPath(path2, paint2);
     }
 
     // Alt kısmı boyama
