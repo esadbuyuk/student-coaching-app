@@ -200,13 +200,16 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                             if (!isMobile(context)) {
                                               context.go('/lastTestResults');
                                             }
-                                            ScoreTableWidget.studentName =
-                                                playerListData[playerNo].name +
-                                                    " " +
-                                                    playerListData[playerNo]
-                                                        .surname;
-                                            selectedStudentName =
-                                                ScoreTableWidget.studentName;
+                                            setState(() {
+                                              ScoreTableWidget.studentName =
+                                                  playerListData[playerNo]
+                                                          .name +
+                                                      " " +
+                                                      playerListData[playerNo]
+                                                          .surname;
+                                              selectedStudentName =
+                                                  ScoreTableWidget.studentName;
+                                            });
                                             matematikNet =
                                                 ScoreTableWidget.subjectScores[
                                                         "Matematik"] ??
@@ -250,14 +253,14 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                               child: Row(
                                                 children: [
                                                   SizedBox(
-                                                    width: 75.w,
+                                                    width: 85.w,
                                                     child: Text(
                                                       style: myTonicStyle(
                                                         isHoveredList[playerNo]
                                                             ? mySecondaryTextColor
                                                             : myTextColor,
                                                       ),
-                                                      "${playerNo + 1}. ${isMobile(context) ? getTruncateName(playerListData[playerNo].name) : getTruncateNameSurname(playerListData[playerNo].name, playerListData[playerNo].surname)}",
+                                                      "${playerNo + 1}. ${isMobile(context) ? getTruncateName(playerListData[playerNo].name, maxLength: 9) : getTruncateNameSurname(playerListData[playerNo].name, playerListData[playerNo].surname)}",
                                                     ),
                                                   ),
                                                   if (!isMobile(context))

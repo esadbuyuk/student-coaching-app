@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
     ]);
     final GoRouter router = GoRouter(
       navigatorKey: navigatorKey,
-      initialLocation: '/charts',
+      initialLocation: '/home',
       routes: [
         GoRoute(
           path: '/login',
