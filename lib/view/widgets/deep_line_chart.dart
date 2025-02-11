@@ -225,7 +225,7 @@ class DeepLineCartPainter extends CustomPainter {
 
       List<Color> lineColors = colorMap.values.toList();
       if (!lineChart) {
-// Alt kısmı boyama
+        // Alt kısmı boyama
         Path path2 = Path();
         path2.moveTo(margin, size.height);
         path2.lineTo(margin,
@@ -238,16 +238,42 @@ class DeepLineCartPainter extends CustomPainter {
         }
         path2.lineTo(size.width, size.height);
         path2.close();
+
         canvas.drawPath(
           path2,
           Paint()
             ..color = darkMode
-                ? myBackgroundColor.withOpacity(0.7 * animationValue)
-                : myBackgroundColor.withOpacity(0.7 * animationValue),
+                ? myBackgroundColor.withOpacity(1 * animationValue)
+                : myBackgroundColor.withOpacity(0.8 * animationValue),
         );
         canvas.drawPath(
           path2,
-          Paint()..color = Colors.white.withOpacity(0.05 * animationValue),
+          Paint()
+            ..color = darkMode
+                ? Colors.white.withOpacity(0.08 * animationValue)
+                : Colors.white.withOpacity(0.2 * animationValue),
+        );
+
+        // Üst kısmı boyama (kırmızı)
+        Path path3 = Path();
+        path3.moveTo(margin, 0);
+        path3.lineTo(margin,
+            size.height - scores[0].score * columnHeight * animationValue);
+        for (int i = 1; i < scores.length; i++) {
+          double x = margin + columnWidth * i;
+          double y =
+              size.height - scores[i].score * columnHeight * animationValue;
+          path3.lineTo(x, y);
+        }
+        path3.lineTo(size.width, 0);
+        path3.close();
+
+        canvas.drawPath(
+          path3,
+          Paint()
+            ..color = darkMode
+                ? myPrimaryColor.withOpacity(0.5 * animationValue)
+                : myPrimaryColor.withOpacity(0.4 * animationValue),
         );
       }
 

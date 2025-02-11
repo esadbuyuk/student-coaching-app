@@ -15,6 +15,7 @@ import '../../model/my_constants.dart';
 import '../../model/trainer.dart';
 import '../widgets/my_app_bar.dart';
 import '../widgets/widget_decorations.dart';
+import 'home_page.dart';
 
 class ScoreListPage extends StatefulWidget {
   const ScoreListPage({Key? key}) : super(key: key);
@@ -32,6 +33,13 @@ class _ScoreListPageState extends State<ScoreListPage> {
   File? imageFile;
   ScrollController scrollController = ScrollController();
   List<bool> isHoveredList = [];
+  String? selectedStudentName;
+  double? turkceNet;
+  double? matematikNet;
+  double? sosyalNet;
+  double? fizikNet;
+  double? biyolojiNet;
+  double? kimyaNet;
 
   @override
   void initState() {
@@ -46,7 +54,7 @@ class _ScoreListPageState extends State<ScoreListPage> {
 
   @override
   Widget build(BuildContext context) {
-    double boxWidths = 25.w;
+    double boxWidths = isMobile(context) ? 100.w : 25.w;
     return SafeArea(
       child: Scaffold(
         appBar: buildAppBar(context, true),
@@ -70,31 +78,46 @@ class _ScoreListPageState extends State<ScoreListPage> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     SizedBox(
-                      height: 25.h,
+                      height: selectedStudentName != null ? 15.h : 25.h,
                     ),
-                    Image(
-                      width: 130.h,
-                      height: 130.h,
-                      image: AssetImage("assets/icons/KAIHL_LOGO_YAZILI.png"),
-                    ),
+                    if (selectedStudentName != null)
+                      Row(
+                        children: [
+                          const Expanded(child: SizedBox()),
+                          ScoreTableWidget(),
+                          const Expanded(child: SizedBox()),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            child: SizedBox(
+                              height: isMobile(context) ? 123.h : 103.h,
+                              // width: isMobile(context) ? 900 : 240,
+                              child: const ButtonCard(
+                                  title: "ANALİZE GİT",
+                                  icon: Icons.bar_chart_outlined,
+                                  destinationPage: "/lastTestResults"),
+                            ),
+                          ),
+                          const Expanded(child: SizedBox()),
+                        ],
+                      ),
+                    if (selectedStudentName == null)
+                      Image(
+                        width: 130.h,
+                        height: 130.h,
+                        image: AssetImage("assets/icons/KAIHL_LOGO_YAZILI.png"),
+                      ),
                     SizedBox(
                       height: 10.h,
                     ),
-                    SizedBox(
-                      height: 60.h,
+                    Container(
+                      height: 20.h,
                       width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "DENEME 3 (BİLGİ SARMAL YAYINLARI)",
-                                style: myTonicStyle(mySecondaryTextColor),
-                              ),
-                            ),
-                          ),
-                        ],
+                      alignment: Alignment.center,
+                      child: FittedBox(
+                        child: Text(
+                          "DENEME 3 (BİLGİ SARMAL YAYINLARI)",
+                          style: myTonicStyle(mySecondaryTextColor),
+                        ),
                       ),
                     ),
                     Padding(
@@ -127,12 +150,18 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                           "İSİM",
                                         ),
                                       ),
-                                      buildHeaderBox(boxWidths, "TÜRKÇE"),
-                                      buildHeaderBox(boxWidths, "MATEMATİK"),
-                                      buildHeaderBox(boxWidths, "FİZİK"),
-                                      buildHeaderBox(boxWidths, "BİYOLOJİ"),
-                                      buildHeaderBox(boxWidths, "KİMYA"),
-                                      buildHeaderBox(boxWidths, "SOSYAL"),
+                                      if (!isMobile(context))
+                                        buildHeaderBox(boxWidths, "TÜRKÇE"),
+                                      if (!isMobile(context))
+                                        buildHeaderBox(boxWidths, "MATEMATİK"),
+                                      if (!isMobile(context))
+                                        buildHeaderBox(boxWidths, "FİZİK"),
+                                      if (!isMobile(context))
+                                        buildHeaderBox(boxWidths, "BİYOLOJİ"),
+                                      if (!isMobile(context))
+                                        buildHeaderBox(boxWidths, "KİMYA"),
+                                      if (!isMobile(context))
+                                        buildHeaderBox(boxWidths, "SOSYAL"),
                                       const Expanded(
                                         child: SizedBox(),
                                       ),
@@ -142,7 +171,13 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: isMobile(context) ? 205.h : 415.h,
+                                height: isMobile(context)
+                                    ? selectedStudentName == null
+                                        ? 370.h
+                                        : 360.h
+                                    : selectedStudentName == null
+                                        ? 370.h
+                                        : 320.h,
                                 width: double.maxFinite,
                                 child: Scrollbar(
                                   thumbVisibility: true,
@@ -162,7 +197,36 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                             isHoveredList[playerNo] = false),
                                         child: GestureDetector(
                                           onTapDown: (details) {
-                                            context.go('/lastTestResults');
+                                            if (!isMobile(context)) {
+                                              context.go('/lastTestResults');
+                                            }
+                                            ScoreTableWidget.studentName =
+                                                playerListData[playerNo].name +
+                                                    " " +
+                                                    playerListData[playerNo]
+                                                        .surname;
+                                            selectedStudentName =
+                                                ScoreTableWidget.studentName;
+                                            matematikNet =
+                                                ScoreTableWidget.subjectScores[
+                                                        "Matematik"] ??
+                                                    0.0;
+                                            turkceNet = ScoreTableWidget
+                                                    .subjectScores["Türkçe"] ??
+                                                0.0;
+                                            sosyalNet = ScoreTableWidget
+                                                    .subjectScores["Sosyal"] ??
+                                                0.0;
+                                            fizikNet = ScoreTableWidget
+                                                    .subjectScores["Fizik"] ??
+                                                0.0;
+                                            biyolojiNet =
+                                                ScoreTableWidget.subjectScores[
+                                                        "Biyoloji"] ??
+                                                    0.0;
+                                            kimyaNet = ScoreTableWidget
+                                                    .subjectScores["Kimya"] ??
+                                                0.0;
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(
@@ -193,111 +257,117 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                                             ? mySecondaryTextColor
                                                             : myTextColor,
                                                       ),
-                                                      "${playerNo + 1}. ${getTruncateNameSurname(playerListData[playerNo].name, playerListData[playerNo].surname)}",
+                                                      "${playerNo + 1}. ${isMobile(context) ? getTruncateName(playerListData[playerNo].name) : getTruncateNameSurname(playerListData[playerNo].name, playerListData[playerNo].surname)}",
                                                     ),
                                                   ),
-                                                  SizedBox(
-                                                    width: boxWidths,
-                                                    child: Center(
-                                                      child: Text(
-                                                        style: myTonicStyle(
-                                                          isHoveredList[
-                                                                  playerNo]
-                                                              ? mySecondaryTextColor
-                                                              : myTextColor,
+                                                  if (!isMobile(context))
+                                                    SizedBox(
+                                                      width: boxWidths,
+                                                      child: Center(
+                                                        child: Text(
+                                                          style: myTonicStyle(
+                                                            isHoveredList[
+                                                                    playerNo]
+                                                                ? mySecondaryTextColor
+                                                                : myTextColor,
+                                                          ),
+                                                          (playerListData[playerNo]
+                                                                      .overall ??
+                                                                  "-")
+                                                              .toString(),
                                                         ),
-                                                        (playerListData[playerNo]
-                                                                    .overall ??
-                                                                "-")
-                                                            .toString(),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: boxWidths,
-                                                    child: Center(
-                                                      child: Text(
-                                                        style: myTonicStyle(
-                                                          isHoveredList[
-                                                                  playerNo]
-                                                              ? mySecondaryTextColor
-                                                              : myTextColor,
+                                                  if (!isMobile(context))
+                                                    SizedBox(
+                                                      width: boxWidths,
+                                                      child: Center(
+                                                        child: Text(
+                                                          style: myTonicStyle(
+                                                            isHoveredList[
+                                                                    playerNo]
+                                                                ? mySecondaryTextColor
+                                                                : myTextColor,
+                                                          ),
+                                                          (playerListData[playerNo]
+                                                                      .overall ??
+                                                                  "-")
+                                                              .toString(),
                                                         ),
-                                                        (playerListData[playerNo]
-                                                                    .overall ??
-                                                                "-")
-                                                            .toString(),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: boxWidths,
-                                                    child: Center(
-                                                      child: Text(
-                                                        style: myTonicStyle(
-                                                          isHoveredList[
-                                                                  playerNo]
-                                                              ? mySecondaryTextColor
-                                                              : myTextColor,
+                                                  if (!isMobile(context))
+                                                    SizedBox(
+                                                      width: boxWidths,
+                                                      child: Center(
+                                                        child: Text(
+                                                          style: myTonicStyle(
+                                                            isHoveredList[
+                                                                    playerNo]
+                                                                ? mySecondaryTextColor
+                                                                : myTextColor,
+                                                          ),
+                                                          (playerListData[playerNo]
+                                                                      .overall ??
+                                                                  "-")
+                                                              .toString(),
                                                         ),
-                                                        (playerListData[playerNo]
-                                                                    .overall ??
-                                                                "-")
-                                                            .toString(),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: boxWidths,
-                                                    child: Center(
-                                                      child: Text(
-                                                        style: myTonicStyle(
-                                                          isHoveredList[
-                                                                  playerNo]
-                                                              ? mySecondaryTextColor
-                                                              : myTextColor,
+                                                  if (!isMobile(context))
+                                                    SizedBox(
+                                                      width: boxWidths,
+                                                      child: Center(
+                                                        child: Text(
+                                                          style: myTonicStyle(
+                                                            isHoveredList[
+                                                                    playerNo]
+                                                                ? mySecondaryTextColor
+                                                                : myTextColor,
+                                                          ),
+                                                          (playerListData[playerNo]
+                                                                      .overall ??
+                                                                  "-")
+                                                              .toString(),
                                                         ),
-                                                        (playerListData[playerNo]
-                                                                    .overall ??
-                                                                "-")
-                                                            .toString(),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: boxWidths,
-                                                    child: Center(
-                                                      child: Text(
-                                                        style: myTonicStyle(
-                                                          isHoveredList[
-                                                                  playerNo]
-                                                              ? mySecondaryTextColor
-                                                              : myTextColor,
+                                                  if (!isMobile(context))
+                                                    SizedBox(
+                                                      width: boxWidths,
+                                                      child: Center(
+                                                        child: Text(
+                                                          style: myTonicStyle(
+                                                            isHoveredList[
+                                                                    playerNo]
+                                                                ? mySecondaryTextColor
+                                                                : myTextColor,
+                                                          ),
+                                                          (playerListData[playerNo]
+                                                                      .overall ??
+                                                                  "-")
+                                                              .toString(),
                                                         ),
-                                                        (playerListData[playerNo]
-                                                                    .overall ??
-                                                                "-")
-                                                            .toString(),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: boxWidths,
-                                                    child: Center(
-                                                      child: Text(
-                                                        style: myTonicStyle(
-                                                          isHoveredList[
-                                                                  playerNo]
-                                                              ? mySecondaryTextColor
-                                                              : myTextColor,
+                                                  if (!isMobile(context))
+                                                    SizedBox(
+                                                      width: boxWidths,
+                                                      child: Center(
+                                                        child: Text(
+                                                          style: myTonicStyle(
+                                                            isHoveredList[
+                                                                    playerNo]
+                                                                ? mySecondaryTextColor
+                                                                : myTextColor,
+                                                          ),
+                                                          (playerListData[playerNo]
+                                                                      .overall ??
+                                                                  "-")
+                                                              .toString(),
                                                         ),
-                                                        (playerListData[playerNo]
-                                                                    .overall ??
-                                                                "-")
-                                                            .toString(),
                                                       ),
                                                     ),
-                                                  ),
                                                   const Expanded(
                                                     child: SizedBox(),
                                                   ),
@@ -333,6 +403,25 @@ class _ScoreListPageState extends State<ScoreListPage> {
                         ),
                       ),
                     ),
+                    if (selectedStudentName == null)
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: 0.w, right: 10.w, top: 10.h),
+                        child: SizedBox(
+                          height: 20.h,
+                          child: Center(
+                            child: FittedBox(
+                              child: Text(
+                                "Denemenin detaylı analizi için bir öğrenci seçin.",
+                                style: myThightStyle(
+                                  color: mySecondaryTextColor,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ]);
             }
           },
@@ -348,6 +437,78 @@ class _ScoreListPageState extends State<ScoreListPage> {
         child: Text(
           style: myTonicStyle(mySecondaryTextColor),
           text,
+        ),
+      ),
+    );
+  }
+}
+
+class ScoreTableWidget extends StatelessWidget {
+  static String studentName = "Ali Desidero";
+  static Map<String, double> subjectScores = {
+    "Matematik": 32.5,
+    "Türkçe": 30.0,
+    "Fizik": 25.0,
+    "Kimya": 27.75,
+    "Biyoloji": 30.0,
+    "Sosyal": 30.0,
+  };
+
+  ScoreTableWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        //decoration: buildBorderDecoration(),
+        height: 180.h,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 20.h,
+              child: FittedBox(
+                child: Text(
+                  studentName,
+                  style: myTonicStyle(myIconsColor),
+                ),
+              ),
+            ),
+            const Divider(color: Colors.black),
+            Container(
+              //height: 130.h,
+              decoration: buildBorderDecoration(),
+              padding: EdgeInsets.all(8),
+              child: Column(
+                children: subjectScores.entries.map((entry) {
+                  return SizedBox(
+                    width: isMobile(context) ? 100.w : 50.w,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 15.h,
+                          child: FittedBox(
+                              child: Text(entry.key,
+                                  style: myThightStyle(
+                                      color: mySecondaryTextColor))),
+                        ),
+                        const Expanded(child: SizedBox()),
+                        SizedBox(
+                          height: 15.h,
+                          child: FittedBox(
+                            child: Text(entry.value.toStringAsFixed(2),
+                                style:
+                                    myThightStyle(color: mySecondaryTextColor)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
         ),
       ),
     );

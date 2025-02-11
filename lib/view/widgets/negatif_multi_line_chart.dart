@@ -96,11 +96,11 @@ class DifficultyMultiChartState extends State<DifficultyMultiChart>
       children: List.generate(skillNames.length, (index) {
         return GestureDetector(
           onTapUp: (details) {
-            widget.callbackFunct(
-              clickedSkillId: lastIdsofEachSubjectList[index],
-              clickedSkillStat: lastValuesofEachSubjectList[index],
-              clickedSkillName: skillNames[index],
-            );
+            // widget.callbackFunct(
+            //   clickedSkillId: lastIdsofEachSubjectList[index],
+            //   clickedSkillStat: lastValuesofEachSubjectList[index],
+            //   clickedSkillName: skillNames[index],
+            // );
           },
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -118,7 +118,7 @@ class DifficultyMultiChartState extends State<DifficultyMultiChart>
               const SizedBox(width: 5),
               Text(
                 skillNames[index],
-                style: myThightStyle(color: mySecondaryTextColor),
+                style: myThightStyle(color: mySecondaryTextColor, fontSize: 12),
               ),
             ],
           ),

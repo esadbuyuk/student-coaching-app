@@ -186,7 +186,7 @@ class _KingsThroneState extends State<KingsThrone> {
             Padding(
               padding: const EdgeInsets.only(left: 4.0, bottom: 3.0),
               child: Text(
-                "net artışı",
+                "net ortalaması",
                 style: myTonicStyle(
                     darkMode ? mySecondaryTextColor : myTextColor,
                     fontSize: 9),

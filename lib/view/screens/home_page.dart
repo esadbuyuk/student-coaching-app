@@ -28,7 +28,10 @@ class HomePage extends StatelessWidget {
               fit: BoxFit
                   .cover, // Ekranı tamamen kaplayacak şekilde resmi ölçeklendirir
               colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.1), // Resmi saydam hale getirir
+                darkMode
+                    ? Colors.black.withOpacity(0.1)
+                    : Colors.white
+                        .withOpacity(0.1), // Resmi saydam hale getirir
                 BlendMode.dstATop, // Karışım modu
               ),
             ),
@@ -217,7 +220,7 @@ class _ButtonCardState extends State<ButtonCard> {
         },
         child: isMobile(context)
             ? Card(
-                color: myPrimaryColor,
+                color: darkMode ? myPrimaryColor : myPrimaryColor,
                 shadowColor: mySecondaryColor,
                 elevation: 3.h,
                 shape: RoundedRectangleBorder(
@@ -244,7 +247,7 @@ class _ButtonCardState extends State<ButtonCard> {
                                 child: Icon(
                                   widget.icon,
                                   size: 100,
-                                  color: myIconsColor,
+                                  color: darkMode ? myIconsColor : myIconsColor,
                                 ),
                               ),
                             ),
@@ -279,7 +282,7 @@ class _ButtonCardState extends State<ButtonCard> {
                                   widget.title,
                                   style: TextStyle(
                                     fontFamily: 'MyTonicFont',
-                                    color: myTextColor,
+                                    color: myIconsColor,
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w900,
                                     letterSpacing: 1,
@@ -300,8 +303,12 @@ class _ButtonCardState extends State<ButtonCard> {
               )
             : Card(
                 color: _isHovered
-                    ? myPrimaryColor.withOpacity(1)
-                    : mySecondaryColor.withOpacity(1),
+                    ? darkMode
+                        ? mySecondaryColor.withOpacity(1)
+                        : myPrimaryColor.withOpacity(1)
+                    : darkMode
+                        ? myBackgroundColor.withOpacity(1)
+                        : mySecondaryColor.withOpacity(1),
                 // shadowColor: mySecondaryColor.withOpacity(1),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0.r)),
@@ -343,8 +350,12 @@ class _ButtonCardState extends State<ButtonCard> {
                                 widget.icon,
                                 size: 90,
                                 color: _isHovered
-                                    ? mySecondaryColor.withOpacity(0.6)
-                                    : myPrimaryColor.withOpacity(0.2),
+                                    ? darkMode
+                                        ? myPrimaryColor.withOpacity(0.6)
+                                        : mySecondaryColor.withOpacity(0.6)
+                                    : darkMode
+                                        ? mySecondaryColor.withOpacity(0.2)
+                                        : myPrimaryColor.withOpacity(0.2),
                               ),
                             ),
                           ),
@@ -358,7 +369,13 @@ class _ButtonCardState extends State<ButtonCard> {
                             widget.title,
                             style: TextStyle(
                               fontFamily: 'MyTonicFont',
-                              color: _isHovered ? myIconsColor : myPrimaryColor,
+                              color: _isHovered
+                                  ? darkMode
+                                      ? myTextColor
+                                      : myIconsColor
+                                  : darkMode
+                                      ? myIconsColor
+                                      : myPrimaryColor,
                               fontSize: 19,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 3,

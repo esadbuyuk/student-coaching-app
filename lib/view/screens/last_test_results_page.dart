@@ -7,7 +7,6 @@ import 'package:pcaweb/controller/ui_controller.dart';
 
 import '../../controller/disciple_controller.dart';
 import '../../controller/score_controller.dart';
-import '../../controller/string_operations.dart';
 import '../../controller/user_controller.dart';
 import '../../model/disciple.dart';
 import '../../model/my_constants.dart';
@@ -20,7 +19,6 @@ import '../widgets/my_app_bar.dart';
 import '../widgets/my_card_clippers.dart';
 import '../widgets/player_id_card.dart';
 import '../widgets/question_stats.dart';
-import '../widgets/score_chart.dart';
 import '../widgets/skill_card.dart';
 import '../widgets/widget_decorations.dart';
 
@@ -393,58 +391,56 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
     _indicatorOverlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         top: getScreenHeight(context) / 3,
-        left: 50.w,
-        right: 50.w,
+        left: (getScreenWidth(context) - 220) /
+            2, // 220 = stacksWidth of polyChart
+        // right: 50.w,
         child: Material(
           color: Colors.transparent,
           child: // StatsIndicator
-              SizedBox(
-            width: 240.w, // yükseklik ile eşit olmak zorunda.
-
-            child: Column(
-              children: [
-                Container(
-                  width: 240.w, // yükseklik ile eşit olmak zorunda.
-                  //height: 150,
-                  decoration: buildOverlayDecoration(),
-                  child: Center(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.transparent, // Dairenin iç rengi
-                        shape: BoxShape.circle, // Daire şekli
-                      ),
-                      //margin: const EdgeInsetsDirectional.all(60),
-                      child: buildFutureStatsIndicator(),
-                    ),
-                  ),
-                ),
-                buildVerticalSpacer(),
-                GestureDetector(
-                  onTapUp: (details) {
-                    _updateHeaderFromMultiLine(
-                        clickedSkillStat: 78, clickedSkillName: "TOTAL");
-                  },
+              Column(
+            children: [
+              Container(
+                // width: 210, // yükseklik ile eşit olmak zorunda.
+                //height: 150,
+                decoration: buildOverlayDecoration(),
+                child: Center(
                   child: Container(
-                    width: 70.w, // yükseklik ile eşit olmak zorunda.
-                    height: 70.h,
-                    decoration: buildOverlayDecoration(),
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: Colors.transparent, // Dairenin iç rengi
-                        shape: BoxShape.circle, // Daire şekli
-                      ),
-                      //margin: const EdgeInsetsDirectional.all(60),
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Center(
-                            child: SkillCard(stat: 78, skillName: "TOTAL")),
-                      ),
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent, // Dairenin iç rengi
+                      shape: BoxShape.circle, // Daire şekli
+                    ),
+                    //margin: const EdgeInsetsDirectional.all(60),
+                    child: buildFutureStatsIndicator(),
+                  ),
+                ),
+              ),
+              buildVerticalSpacer(),
+              GestureDetector(
+                onTapUp: (details) {
+                  _updateHeaderFromMultiLine(
+                      clickedSkillStat: 78, clickedSkillName: "TOTAL");
+                },
+                child: Container(
+                  width: 70, // yükseklik ile eşit olmak zorunda.
+                  height: 70,
+                  decoration: buildOverlayDecoration(),
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent, // Dairenin iç rengi
+                      shape: BoxShape.circle, // Daire şekli
+                    ),
+                    //margin: const EdgeInsetsDirectional.all(60),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
+                          child: FittedBox(
+                              child: SkillCard(stat: 78, skillName: "TOTAL"))),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -486,6 +482,10 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
     double miniBoxHeights = isMobile(context)
         ? (screenHeight / 11) * 4
         : multiLineHeight - (indicatorHeight + verticalSpace);
+    double circleBoxHeights = isMobile(context)
+        ? (screenHeight / 11) * 4.5
+        : multiLineHeight - (indicatorHeight + verticalSpace);
+
     double idCardHeight = columnHeight - (miniBoxHeights + verticalSpace);
 
     // width lengths
@@ -493,27 +493,31 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
     double sidePaddings = lateralSpace;
     double mobileContainerWidths = screenWidth - sidePaddings * 2;
     double firstColumnWidth = 35.w;
-    double secondColumnWidth = 140.w;
-    double thirdColumnWidth = indicatorHeight + subStatsWidth + lateralSpace;
+    double thirdColumnWidth = 140.w;
+    double secondColumnWidth = indicatorHeight + subStatsWidth + lateralSpace;
 
     double edgeMargin = screenWidth -
         (firstColumnWidth +
-            secondColumnWidth +
             thirdColumnWidth +
+            secondColumnWidth +
             lateralSpace * 4); // Kenarlardan kaç piksel içinde ışık kaybolsun?
 
     return LayoutBuilder(
       builder: (context, constraints) {
         if (isMobile(context)) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            _removeOverlay();
+            if (mounted) {
+              _removeOverlay();
 
-            _showOverlay(context, "Bir Ders Seçin");
+              _showOverlay(context, "Bir Ders Seçin");
+            }
           });
         } else {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            _removeOverlay();
-            _removeIndicatorOverlay();
+            if (mounted) {
+              _removeOverlay();
+              _removeIndicatorOverlay();
+            }
           });
         }
 
@@ -571,651 +575,640 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                       width: mobileContainerWidths,
                                       height: subStatsHeight,
                                       // decoration: buildBorderDecoration(),
-                                      child: SizedBox(
-                                        height: subStatsHeight,
-                                        width: mobileContainerWidths,
-                                        child: (subStatsFuture != null)
-                                            ? Padding(
-                                                padding:
-                                                    EdgeInsetsDirectional.only(
-                                                  top: 100.h,
-                                                  bottom: 0.w, // 10.w
-                                                  end: 40.h,
-                                                  start: 50.h,
-                                                ),
-                                                child: Column(
-                                                  children: [
-                                                    FutureBuilder<List<Score>>(
-                                                      key:
-                                                          subStatsFutureResetterKey,
-                                                      future: subStatsFuture,
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        if (snapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .waiting) {
-                                                          return const Center(
-                                                              child:
-                                                                  CircularProgressIndicator());
-                                                        } else if (snapshot
-                                                            .hasError) {
-                                                          return Center(
-                                                              child: Text(
-                                                                  'Error: ${snapshot.error}'));
-                                                        } else if (snapshot
-                                                            .hasData) {
-                                                          final subStatsData =
-                                                              snapshot.data!;
-                                                          subValuesList =
-                                                              subStatsData
-                                                                  .map((score) =>
-                                                                      score
-                                                                          .score
-                                                                          .toDouble())
-                                                                  .toList();
-                                                          subKeysList =
-                                                              subStatsData
-                                                                  .map((score) =>
-                                                                      score
-                                                                          .name)
-                                                                  .toList();
-                                                          subIdsList = subStatsData
-                                                              .map((score) =>
-                                                                  score.skillID)
-                                                              .toList();
+                                      child: (subStatsFuture != null)
+                                          ? Padding(
+                                              padding:
+                                                  EdgeInsetsDirectional.only(
+                                                top: 100.h,
+                                                bottom: 0.w, // 10.w
+                                                end: 40.h,
+                                                start: 50.h,
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  FutureBuilder<List<Score>>(
+                                                    key:
+                                                        subStatsFutureResetterKey,
+                                                    future: subStatsFuture,
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .waiting) {
+                                                        return const Center(
+                                                            child:
+                                                                CircularProgressIndicator());
+                                                      } else if (snapshot
+                                                          .hasError) {
+                                                        return Center(
+                                                            child: Text(
+                                                                'Error: ${snapshot.error}'));
+                                                      } else if (snapshot
+                                                          .hasData) {
+                                                        final subStatsData =
+                                                            snapshot.data!;
+                                                        subValuesList = subStatsData
+                                                            .map((score) =>
+                                                                score.score
+                                                                    .toDouble())
+                                                            .toList();
+                                                        subKeysList =
+                                                            subStatsData
+                                                                .map((score) =>
+                                                                    score.name)
+                                                                .toList();
+                                                        subIdsList = subStatsData
+                                                            .map((score) =>
+                                                                score.skillID)
+                                                            .toList();
 
-                                                          return SizedBox(
-                                                            height: 280.h,
-                                                            width:
-                                                                mobileContainerWidths,
-                                                            child: ListView
-                                                                .builder(
-                                                              physics:
-                                                                  const BouncingScrollPhysics(),
-                                                              itemCount:
-                                                                  subStatsData
-                                                                      .length,
-                                                              itemBuilder:
-                                                                  (context,
-                                                                      index) {
-                                                                return TweenAnimationBuilder(
-                                                                  duration:
-                                                                      Duration(
-                                                                    milliseconds: 300 +
-                                                                        (index *
-                                                                            100),
-                                                                  ), // Her öğeye gecikme ekliyoruz
-                                                                  tween: Tween<
-                                                                          double>(
-                                                                      begin:
-                                                                          -330.0,
-                                                                      end:
-                                                                          0.0), // Y ekseni kayma animasyonu
-                                                                  builder: (context,
-                                                                      double
-                                                                          value,
-                                                                      child) {
-                                                                    return Transform
-                                                                        .translate(
-                                                                      offset: Offset(
-                                                                          value,
-                                                                          0),
-                                                                      child:
-                                                                          child,
-                                                                    );
+                                                        return SizedBox(
+                                                          height: 280.h,
+                                                          width:
+                                                              mobileContainerWidths,
+                                                          child:
+                                                              ListView.builder(
+                                                            physics:
+                                                                const BouncingScrollPhysics(),
+                                                            itemCount:
+                                                                subStatsData
+                                                                    .length,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return TweenAnimationBuilder(
+                                                                duration:
+                                                                    Duration(
+                                                                  milliseconds: 300 +
+                                                                      (index *
+                                                                          100),
+                                                                ), // Her öğeye gecikme ekliyoruz
+                                                                tween: Tween<
+                                                                        double>(
+                                                                    begin:
+                                                                        -330.0,
+                                                                    end:
+                                                                        0.0), // Y ekseni kayma animasyonu
+                                                                builder: (context,
+                                                                    double
+                                                                        value,
+                                                                    child) {
+                                                                  return Transform
+                                                                      .translate(
+                                                                    offset:
+                                                                        Offset(
+                                                                            value,
+                                                                            0),
+                                                                    child:
+                                                                        child,
+                                                                  );
+                                                                },
+
+                                                                child:
+                                                                    MouseRegion(
+                                                                  onEnter: (_) {
+                                                                    setState(
+                                                                        () {
+                                                                      hoveredSubSkillIndex =
+                                                                          index; // Hover olan index'i ayarla
+                                                                    });
                                                                   },
-
+                                                                  onExit: (_) {
+                                                                    setState(
+                                                                        () {
+                                                                      hoveredSubSkillIndex =
+                                                                          null; // Hover olmayan durumda null yap
+                                                                    });
+                                                                  },
                                                                   child:
-                                                                      MouseRegion(
-                                                                    onEnter:
-                                                                        (_) {
+                                                                      GestureDetector(
+                                                                    onTapUp:
+                                                                        (details) {
                                                                       setState(
                                                                           () {
-                                                                        hoveredSubSkillIndex =
-                                                                            index; // Hover olan index'i ayarla
-                                                                      });
-                                                                    },
-                                                                    onExit:
-                                                                        (_) {
-                                                                      setState(
-                                                                          () {
-                                                                        hoveredSubSkillIndex =
-                                                                            null; // Hover olmayan durumda null yap
+                                                                        selectedSubSkill =
+                                                                            index;
+                                                                        _updateHeaderFromSubStats(
+                                                                          clickedSkillId:
+                                                                              subIdsList![index],
+                                                                          clickedSkillName:
+                                                                              subKeysList![index],
+                                                                          clickedSkillStat:
+                                                                              subValuesList![index].toInt(),
+                                                                        );
                                                                       });
                                                                     },
                                                                     child:
-                                                                        GestureDetector(
-                                                                      onTapUp:
-                                                                          (details) {
-                                                                        setState(
-                                                                            () {
-                                                                          selectedSubSkill =
-                                                                              index;
-                                                                          _updateHeaderFromSubStats(
-                                                                            clickedSkillId:
-                                                                                subIdsList![index],
-                                                                            clickedSkillName:
-                                                                                subKeysList![index],
-                                                                            clickedSkillStat:
-                                                                                subValuesList![index].toInt(),
-                                                                          );
-                                                                        });
-                                                                      },
+                                                                        Container(
+                                                                      width:
+                                                                          mobileContainerWidths,
+                                                                      // decoration: index == selectedIndex
+                                                                      //     ? buildSelectedDecoration()
+                                                                      //     : BoxDecoration(
+                                                                      //         border: Border.all(
+                                                                      //             color: myPrimaryColor,
+                                                                      //             width: 0.8),
+                                                                      //       ),
+                                                                      margin: EdgeInsets
+                                                                          .only(
+                                                                        bottom:
+                                                                            15.h,
+                                                                        left: index == hoveredSubSkillIndex ||
+                                                                                index == selectedSubSkill
+                                                                            ? 10
+                                                                            : 0,
+                                                                        right: index == hoveredSubSkillIndex ||
+                                                                                index == selectedSubSkill
+                                                                            ? 0
+                                                                            : 10,
+                                                                        // left: (index % 2 == 1) ? 10 : 0,
+                                                                        // right: (index % 2 == 0) ? 10 : 0,
+                                                                      ),
                                                                       child:
-                                                                          Container(
-                                                                        width:
-                                                                            mobileContainerWidths,
-                                                                        // decoration: index == selectedIndex
-                                                                        //     ? buildSelectedDecoration()
-                                                                        //     : BoxDecoration(
-                                                                        //         border: Border.all(
-                                                                        //             color: myPrimaryColor,
-                                                                        //             width: 0.8),
-                                                                        //       ),
-                                                                        margin:
-                                                                            EdgeInsets.only(
-                                                                          bottom:
-                                                                              15.h,
-                                                                          left: index == hoveredSubSkillIndex || index == selectedSubSkill
-                                                                              ? 10
-                                                                              : 0,
-                                                                          right: index == hoveredSubSkillIndex || index == selectedSubSkill
-                                                                              ? 0
-                                                                              : 10,
-                                                                          // left: (index % 2 == 1) ? 10 : 0,
-                                                                          // right: (index % 2 == 0) ? 10 : 0,
-                                                                        ),
+                                                                          ClipPath(
+                                                                        clipper:
+                                                                            MySubSkillCardClipper(),
                                                                         child:
-                                                                            ClipPath(
-                                                                          clipper:
-                                                                              MySubSkillCardClipper(),
+                                                                            Container(
+                                                                          height:
+                                                                              27.h,
+                                                                          width:
+                                                                              mobileContainerWidths,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            border:
+                                                                                Border.all(color: myBackgroundColor, width: 1),
+                                                                          ),
                                                                           child:
-                                                                              Container(
-                                                                            height:
-                                                                                27.h,
-                                                                            width:
-                                                                                mobileContainerWidths,
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              border: Border.all(color: myBackgroundColor, width: 1),
-                                                                            ),
-                                                                            child:
-                                                                                Row(
-                                                                              children: [
-                                                                                const SizedBox(
-                                                                                  width: 20,
-                                                                                ),
-                                                                                Expanded(
-                                                                                  child: ShaderMask(
-                                                                                    shaderCallback: (bounds) {
-                                                                                      return LinearGradient(
-                                                                                        begin: Alignment.centerLeft,
-                                                                                        end: Alignment.centerRight,
-                                                                                        colors: [
-                                                                                          Colors.white.withOpacity(0.9), // Left fade
-                                                                                          Colors.white, // Center fully visible
-                                                                                          Colors.white.withOpacity(0.1), // Right fade
-                                                                                        ],
-                                                                                        stops: const [
-                                                                                          0.0,
-                                                                                          0.80,
-                                                                                          1.0
-                                                                                        ],
-                                                                                      ).createShader(bounds);
-                                                                                    },
-                                                                                    blendMode: BlendMode.dstIn,
-                                                                                    child: SingleChildScrollView(
-                                                                                      scrollDirection: Axis.horizontal,
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.only(right: 8.0, left: 1.0),
-                                                                                        child: Text(
-                                                                                          subKeysList![index],
-                                                                                          // subStatsData[index].name, böyle yapabilirsin
+                                                                              Row(
+                                                                            children: [
+                                                                              const SizedBox(
+                                                                                width: 20,
+                                                                              ),
+                                                                              Expanded(
+                                                                                child: ShaderMask(
+                                                                                  shaderCallback: (bounds) {
+                                                                                    return LinearGradient(
+                                                                                      begin: Alignment.centerLeft,
+                                                                                      end: Alignment.centerRight,
+                                                                                      colors: [
+                                                                                        Colors.white.withOpacity(0.9), // Left fade
+                                                                                        Colors.white, // Center fully visible
+                                                                                        Colors.white.withOpacity(0.1), // Right fade
+                                                                                      ],
+                                                                                      stops: const [
+                                                                                        0.0,
+                                                                                        0.80,
+                                                                                        1.0
+                                                                                      ],
+                                                                                    ).createShader(bounds);
+                                                                                  },
+                                                                                  blendMode: BlendMode.dstIn,
+                                                                                  child: SingleChildScrollView(
+                                                                                    scrollDirection: Axis.horizontal,
+                                                                                    child: Padding(
+                                                                                      padding: const EdgeInsets.only(right: 8.0, left: 1.0),
+                                                                                      child: Text(
+                                                                                        subKeysList![index],
+                                                                                        // subStatsData[index].name, böyle yapabilirsin
 
-                                                                                          style: myTonicStyle(myTextColor, fontSize: 12),
-                                                                                        ),
+                                                                                        style: myTonicStyle(myTextColor, fontSize: 12),
                                                                                       ),
                                                                                     ),
                                                                                   ),
                                                                                 ),
-                                                                                const SizedBox(
-                                                                                  width: 5,
-                                                                                ),
-                                                                                ClipPath(
-                                                                                  clipper: MyScoreFieldClipper(),
-                                                                                  child: Container(
-                                                                                    width: 40,
-                                                                                    alignment: Alignment.center,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: darkMode ? Colors.white.withOpacity(0.4) : Colors.white.withOpacity(0.2),
-                                                                                      // border:
-                                                                                      //     const BorderDirectional(
-                                                                                      //   top: BorderSide(
-                                                                                      //       color: myPrimaryColor,
-                                                                                      //       width: 0),
-                                                                                      // ),
-                                                                                    ),
-                                                                                    child: Text(
-                                                                                      subValuesList![index].toInt().toString(),
-                                                                                      style: myDigitalStyle(color: myTextColor),
-                                                                                    ),
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                width: 5,
+                                                                              ),
+                                                                              ClipPath(
+                                                                                clipper: MyScoreFieldClipper(),
+                                                                                child: Container(
+                                                                                  width: 40,
+                                                                                  alignment: Alignment.center,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: darkMode ? Colors.white.withOpacity(0.4) : Colors.white.withOpacity(0.2),
+                                                                                    // border:
+                                                                                    //     const BorderDirectional(
+                                                                                    //   top: BorderSide(
+                                                                                    //       color: myPrimaryColor,
+                                                                                    //       width: 0),
+                                                                                    // ),
+                                                                                  ),
+                                                                                  child: Text(
+                                                                                    subValuesList![index].toInt().toString(),
+                                                                                    style: myDigitalStyle(color: myTextColor),
                                                                                   ),
                                                                                 ),
-                                                                              ],
-                                                                            ),
+                                                                              ),
+                                                                            ],
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                );
-                                                              },
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        return const Center(
+                                                            child: Text(
+                                                                'No data'));
+                                                      }
+                                                    },
+                                                  ),
+                                                  buildVerticalSpacer(),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 0.w,
+                                                        right: 10.w,
+                                                        bottom: 0.h),
+                                                    child: SizedBox(
+                                                      height: 20.h,
+                                                      width:
+                                                          mobileContainerWidths,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Bir konu seçebilirsiniz.",
+                                                          style: myThightStyle(
+                                                            color: myTextColor,
+                                                            fontSize: 10,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : Padding(
+                                              padding:
+                                                  EdgeInsetsDirectional.only(
+                                                top: 70.h,
+                                                bottom: 0.w, // 10.w
+                                                end: 40.h,
+                                                start: 50.h,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 10.h),
+                                                    child: const CardNameText(
+                                                        darkMode: false,
+                                                        textColors: myTextColor,
+                                                        name:
+                                                            "en yüksek puanlı konular"),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .only(
+                                                      end: 8.w,
+                                                      start: 5.w,
+                                                    ),
+                                                    child: SizedBox(
+                                                      height: 130.h,
+                                                      width:
+                                                          mobileContainerWidths,
+                                                      child: ListView.builder(
+                                                        itemCount: 3,
+                                                        physics:
+                                                            const BouncingScrollPhysics(),
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return TweenAnimationBuilder(
+                                                            duration: Duration(
+                                                              milliseconds:
+                                                                  600 +
+                                                                      (index *
+                                                                          200),
+                                                            ), // Her öğeye gecikme ekliyoruz
+                                                            tween: Tween<
+                                                                    double>(
+                                                                begin: -330.0,
+                                                                end:
+                                                                    0.0), // Y ekseni kayma animasyonu
+                                                            builder: (context,
+                                                                double value,
+                                                                child) {
+                                                              return Transform
+                                                                  .translate(
+                                                                offset: Offset(
+                                                                    value, 0),
+                                                                child: child,
+                                                              );
+                                                            },
+
+                                                            child: Container(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                bottom: 15.h,
+                                                                left: 0,
+                                                                right: 10,
+                                                              ),
+                                                              child: ClipPath(
+                                                                clipper:
+                                                                    MySubSkillCardClipper(),
+                                                                child:
+                                                                    Container(
+                                                                  height: 27.h,
+                                                                  width:
+                                                                      mobileContainerWidths,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    border: Border.all(
+                                                                        color:
+                                                                            myAccentColor,
+                                                                        width:
+                                                                            1.5),
+                                                                  ),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      const SizedBox(
+                                                                        width:
+                                                                            20,
+                                                                      ),
+                                                                      Expanded(
+                                                                        child:
+                                                                            ShaderMask(
+                                                                          shaderCallback:
+                                                                              (bounds) {
+                                                                            return LinearGradient(
+                                                                              begin: Alignment.centerLeft,
+                                                                              end: Alignment.centerRight,
+                                                                              colors: [
+                                                                                Colors.white.withOpacity(0.9), // Left fade
+                                                                                Colors.white, // Center fully visible
+                                                                                Colors.white.withOpacity(0.1), // Right fade
+                                                                              ],
+                                                                              stops: const [
+                                                                                0.0,
+                                                                                0.80,
+                                                                                1.0
+                                                                              ],
+                                                                            ).createShader(bounds);
+                                                                          },
+                                                                          blendMode:
+                                                                              BlendMode.dstIn,
+                                                                          child:
+                                                                              SingleChildScrollView(
+                                                                            scrollDirection:
+                                                                                Axis.horizontal,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(right: 8.0, left: 1.0),
+                                                                              child: Text(
+                                                                                (index == 1
+                                                                                        ? "Yazım kuralları"
+                                                                                        : index == 2
+                                                                                            ? "Paragraf"
+                                                                                            : "Türev")
+                                                                                    .toUpperCase(),
+                                                                                // subStatsData[index].name, böyle yapabilirsin
+
+                                                                                style: myTonicStyle(myTextColor, fontSize: 12),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width:
+                                                                            5,
+                                                                      ),
+                                                                      ClipPath(
+                                                                        clipper:
+                                                                            MyScoreFieldClipper(),
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              40,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color: darkMode
+                                                                                ? Colors.black.withOpacity(0.4)
+                                                                                : Colors.white.withOpacity(0.2),
+                                                                            // border:
+                                                                            //     const BorderDirectional(
+                                                                            //   top: BorderSide(
+                                                                            //       color: myPrimaryColor,
+                                                                            //       width: 0),
+                                                                            // ),
+                                                                          ),
+                                                                          child:
+                                                                              Text(
+                                                                            "88",
+                                                                            style:
+                                                                                myDigitalStyle(color: myTextColor),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
                                                             ),
                                                           );
-                                                        } else {
-                                                          return const Center(
-                                                              child: Text(
-                                                                  'No data'));
-                                                        }
-                                                      },
-                                                    ),
-                                                    buildVerticalSpacer(),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 0.w,
-                                                          right: 10.w,
-                                                          bottom: 0.h),
-                                                      child: SizedBox(
-                                                        height: 20.h,
-                                                        width:
-                                                            mobileContainerWidths,
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Bir konu seçebilirsiniz.",
-                                                            style:
-                                                                myThightStyle(
-                                                              color:
-                                                                  myTextColor,
-                                                              fontSize: 10,
-                                                            ),
-                                                          ),
-                                                        ),
+                                                        },
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
-                                              )
-                                            : Padding(
-                                                padding:
-                                                    EdgeInsetsDirectional.only(
-                                                  top: 70.h,
-                                                  bottom: 0.w, // 10.w
-                                                  end: 40.h,
-                                                  start: 50.h,
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          bottom: 10.h),
-                                                      child: const CardNameText(
-                                                          darkMode: false,
-                                                          textColors:
-                                                              myTextColor,
-                                                          name:
-                                                              "en yüksek puanlı konular"),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 10.h,
+                                                        top: 25.h),
+                                                    child: const CardNameText(
+                                                        darkMode: false,
+                                                        textColors: myTextColor,
+                                                        name:
+                                                            "en düşük puanlı konular"),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .only(
+                                                      end: 8.w,
+                                                      start: 5.w,
                                                     ),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .only(
-                                                        end: 8.w,
-                                                        start: 5.w,
-                                                      ),
-                                                      child: SizedBox(
-                                                        height: 130.h,
-                                                        width:
-                                                            mobileContainerWidths,
-                                                        child: ListView.builder(
-                                                          itemCount: 3,
-                                                          physics:
-                                                              const BouncingScrollPhysics(),
-                                                          itemBuilder:
-                                                              (context, index) {
-                                                            return TweenAnimationBuilder(
-                                                              duration:
-                                                                  Duration(
-                                                                milliseconds:
-                                                                    600 +
-                                                                        (index *
-                                                                            200),
-                                                              ), // Her öğeye gecikme ekliyoruz
-                                                              tween: Tween<
-                                                                      double>(
-                                                                  begin: -330.0,
-                                                                  end:
-                                                                      0.0), // Y ekseni kayma animasyonu
-                                                              builder: (context,
-                                                                  double value,
-                                                                  child) {
-                                                                return Transform
-                                                                    .translate(
-                                                                  offset:
-                                                                      Offset(
-                                                                          value,
-                                                                          0),
-                                                                  child: child,
-                                                                );
-                                                              },
-
-                                                              child: Container(
-                                                                margin:
-                                                                    EdgeInsets
-                                                                        .only(
-                                                                  bottom: 15.h,
-                                                                  left: 0,
-                                                                  right: 10,
-                                                                ),
-                                                                child: ClipPath(
-                                                                  clipper:
-                                                                      MySubSkillCardClipper(),
-                                                                  child:
-                                                                      Container(
-                                                                    height:
-                                                                        27.h,
-                                                                    width:
-                                                                        mobileContainerWidths,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      border: Border.all(
-                                                                          color:
-                                                                              myAccentColor,
-                                                                          width:
-                                                                              1.5),
-                                                                    ),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              20,
-                                                                        ),
-                                                                        Expanded(
+                                                    child: SizedBox(
+                                                      height: 130.h,
+                                                      width:
+                                                          mobileContainerWidths,
+                                                      child: ListView.builder(
+                                                        physics:
+                                                            const BouncingScrollPhysics(),
+                                                        itemCount: 3,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return TweenAnimationBuilder(
+                                                            duration: Duration(
+                                                              milliseconds:
+                                                                  600 +
+                                                                      (index *
+                                                                          200),
+                                                            ), // Her öğeye gecikme ekliyoruz
+                                                            tween: Tween<
+                                                                    double>(
+                                                                begin: -330.0,
+                                                                end:
+                                                                    0.0), // Y ekseni kayma animasyonu
+                                                            builder: (context,
+                                                                double value,
+                                                                child) {
+                                                              return Transform
+                                                                  .translate(
+                                                                offset: Offset(
+                                                                    value, 0),
+                                                                child: child,
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                bottom: 15.h,
+                                                                left: 0,
+                                                                right: 10,
+                                                              ),
+                                                              child: ClipPath(
+                                                                clipper:
+                                                                    MySubSkillCardClipper(),
+                                                                child:
+                                                                    Container(
+                                                                  height: 27.h,
+                                                                  width: 120,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    border: Border.all(
+                                                                        color:
+                                                                            myBackgroundColor,
+                                                                        width:
+                                                                            1.5),
+                                                                  ),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      const SizedBox(
+                                                                        width:
+                                                                            20,
+                                                                      ),
+                                                                      Expanded(
+                                                                        child:
+                                                                            ShaderMask(
+                                                                          shaderCallback:
+                                                                              (bounds) {
+                                                                            return LinearGradient(
+                                                                              begin: Alignment.centerLeft,
+                                                                              end: Alignment.centerRight,
+                                                                              colors: [
+                                                                                Colors.white.withOpacity(0.9), // Left fade
+                                                                                Colors.white, // Center fully visible
+                                                                                Colors.white.withOpacity(0.1), // Right fade
+                                                                              ],
+                                                                              stops: const [
+                                                                                0.0,
+                                                                                0.80,
+                                                                                1.0
+                                                                              ],
+                                                                            ).createShader(bounds);
+                                                                          },
+                                                                          blendMode:
+                                                                              BlendMode.dstIn,
                                                                           child:
-                                                                              ShaderMask(
-                                                                            shaderCallback:
-                                                                                (bounds) {
-                                                                              return LinearGradient(
-                                                                                begin: Alignment.centerLeft,
-                                                                                end: Alignment.centerRight,
-                                                                                colors: [
-                                                                                  Colors.white.withOpacity(0.9), // Left fade
-                                                                                  Colors.white, // Center fully visible
-                                                                                  Colors.white.withOpacity(0.1), // Right fade
-                                                                                ],
-                                                                                stops: const [
-                                                                                  0.0,
-                                                                                  0.80,
-                                                                                  1.0
-                                                                                ],
-                                                                              ).createShader(bounds);
-                                                                            },
-                                                                            blendMode:
-                                                                                BlendMode.dstIn,
+                                                                              SingleChildScrollView(
+                                                                            scrollDirection:
+                                                                                Axis.horizontal,
                                                                             child:
-                                                                                SingleChildScrollView(
-                                                                              scrollDirection: Axis.horizontal,
-                                                                              child: Padding(
-                                                                                padding: const EdgeInsets.only(right: 8.0, left: 1.0),
-                                                                                child: Text(
-                                                                                  (index == 1
-                                                                                          ? "Yazım kuralları"
-                                                                                          : index == 2
-                                                                                              ? "Paragraf"
-                                                                                              : "Türev")
-                                                                                      .toUpperCase(),
-                                                                                  // subStatsData[index].name, böyle yapabilirsin
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(right: 8.0, left: 1.0),
+                                                                              child: Text(
+                                                                                (index == 1
+                                                                                        ? "olasılık"
+                                                                                        : index == 2
+                                                                                            ? "trigonometri"
+                                                                                            : "Denklem ve Eşitsizlikler")
+                                                                                    .toUpperCase(),
+                                                                                // subStatsData[index].name, böyle yapabilirsin
 
-                                                                                  style: myTonicStyle(myTextColor, fontSize: 12),
-                                                                                ),
+                                                                                style: myTonicStyle(myTextColor, fontSize: 12),
                                                                               ),
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                        const SizedBox(
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width:
+                                                                            5,
+                                                                      ),
+                                                                      ClipPath(
+                                                                        clipper:
+                                                                            MyScoreFieldClipper(),
+                                                                        child:
+                                                                            Container(
                                                                           width:
-                                                                              5,
-                                                                        ),
-                                                                        ClipPath(
-                                                                          clipper:
-                                                                              MyScoreFieldClipper(),
+                                                                              40,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color: darkMode
+                                                                                ? Colors.white.withOpacity(0.4)
+                                                                                : Colors.white.withOpacity(0.2),
+                                                                            // border:
+                                                                            //     const BorderDirectional(
+                                                                            //   top: BorderSide(
+                                                                            //       color: myPrimaryColor,
+                                                                            //       width: 0),
+                                                                            // ),
+                                                                          ),
                                                                           child:
-                                                                              Container(
-                                                                            width:
-                                                                                40,
-                                                                            alignment:
-                                                                                Alignment.center,
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: darkMode ? Colors.black.withOpacity(0.4) : Colors.white.withOpacity(0.2),
-                                                                              // border:
-                                                                              //     const BorderDirectional(
-                                                                              //   top: BorderSide(
-                                                                              //       color: myPrimaryColor,
-                                                                              //       width: 0),
-                                                                              // ),
-                                                                            ),
-                                                                            child:
-                                                                                Text(
-                                                                              "88",
-                                                                              style: myDigitalStyle(color: myTextColor),
-                                                                            ),
+                                                                              Text(
+                                                                            "55",
+                                                                            style:
+                                                                                myDigitalStyle(color: myTextColor),
                                                                           ),
                                                                         ),
-                                                                      ],
-                                                                    ),
+                                                                      ),
+                                                                    ],
                                                                   ),
                                                                 ),
                                                               ),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          bottom: 10.h,
-                                                          top: 25.h),
-                                                      child: const CardNameText(
-                                                          darkMode: false,
-                                                          textColors:
-                                                              myTextColor,
-                                                          name:
-                                                              "en düşük puanlı konular"),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .only(
-                                                        end: 8.w,
-                                                        start: 5.w,
-                                                      ),
-                                                      child: SizedBox(
-                                                        height: 130.h,
-                                                        width:
-                                                            mobileContainerWidths,
-                                                        child: ListView.builder(
-                                                          physics:
-                                                              const BouncingScrollPhysics(),
-                                                          itemCount: 3,
-                                                          itemBuilder:
-                                                              (context, index) {
-                                                            return TweenAnimationBuilder(
-                                                              duration:
-                                                                  Duration(
-                                                                milliseconds:
-                                                                    600 +
-                                                                        (index *
-                                                                            200),
-                                                              ), // Her öğeye gecikme ekliyoruz
-                                                              tween: Tween<
-                                                                      double>(
-                                                                  begin: -330.0,
-                                                                  end:
-                                                                      0.0), // Y ekseni kayma animasyonu
-                                                              builder: (context,
-                                                                  double value,
-                                                                  child) {
-                                                                return Transform
-                                                                    .translate(
-                                                                  offset:
-                                                                      Offset(
-                                                                          value,
-                                                                          0),
-                                                                  child: child,
-                                                                );
-                                                              },
-                                                              child: Container(
-                                                                margin:
-                                                                    EdgeInsets
-                                                                        .only(
-                                                                  bottom: 15.h,
-                                                                  left: 0,
-                                                                  right: 10,
-                                                                ),
-                                                                child: ClipPath(
-                                                                  clipper:
-                                                                      MySubSkillCardClipper(),
-                                                                  child:
-                                                                      Container(
-                                                                    height:
-                                                                        27.h,
-                                                                    width: 120,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      border: Border.all(
-                                                                          color:
-                                                                              myBackgroundColor,
-                                                                          width:
-                                                                              1.5),
-                                                                    ),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              20,
-                                                                        ),
-                                                                        Expanded(
-                                                                          child:
-                                                                              ShaderMask(
-                                                                            shaderCallback:
-                                                                                (bounds) {
-                                                                              return LinearGradient(
-                                                                                begin: Alignment.centerLeft,
-                                                                                end: Alignment.centerRight,
-                                                                                colors: [
-                                                                                  Colors.white.withOpacity(0.9), // Left fade
-                                                                                  Colors.white, // Center fully visible
-                                                                                  Colors.white.withOpacity(0.1), // Right fade
-                                                                                ],
-                                                                                stops: const [
-                                                                                  0.0,
-                                                                                  0.80,
-                                                                                  1.0
-                                                                                ],
-                                                                              ).createShader(bounds);
-                                                                            },
-                                                                            blendMode:
-                                                                                BlendMode.dstIn,
-                                                                            child:
-                                                                                SingleChildScrollView(
-                                                                              scrollDirection: Axis.horizontal,
-                                                                              child: Padding(
-                                                                                padding: const EdgeInsets.only(right: 8.0, left: 1.0),
-                                                                                child: Text(
-                                                                                  (index == 1
-                                                                                          ? "olasılık"
-                                                                                          : index == 2
-                                                                                              ? "trigonometri"
-                                                                                              : "Denklem ve Eşitsizlikler")
-                                                                                      .toUpperCase(),
-                                                                                  // subStatsData[index].name, böyle yapabilirsin
-
-                                                                                  style: myTonicStyle(myTextColor, fontSize: 12),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              5,
-                                                                        ),
-                                                                        ClipPath(
-                                                                          clipper:
-                                                                              MyScoreFieldClipper(),
-                                                                          child:
-                                                                              Container(
-                                                                            width:
-                                                                                40,
-                                                                            alignment:
-                                                                                Alignment.center,
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: darkMode ? Colors.white.withOpacity(0.4) : Colors.white.withOpacity(0.2),
-                                                                              // border:
-                                                                              //     const BorderDirectional(
-                                                                              //   top: BorderSide(
-                                                                              //       color: myPrimaryColor,
-                                                                              //       width: 0),
-                                                                              // ),
-                                                                            ),
-                                                                            child:
-                                                                                Text(
-                                                                              "55",
-                                                                              style: myDigitalStyle(color: myTextColor),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    buildVerticalSpacer(),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 0.w,
-                                                          right: 10.w,
-                                                          bottom: 0.h),
-                                                      child: SizedBox(
-                                                        height: 20.h,
-                                                        width:
-                                                            mobileContainerWidths,
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Son denemedeki istatistiklere göre",
-                                                            style:
-                                                                myThightStyle(
-                                                              color:
-                                                                  myTextColor,
-                                                              fontSize: 10,
                                                             ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  buildVerticalSpacer(),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 0.w,
+                                                        right: 10.w,
+                                                        bottom: 0.h),
+                                                    child: SizedBox(
+                                                      height: 20.h,
+                                                      width:
+                                                          mobileContainerWidths,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Son denemedeki istatistiklere göre",
+                                                          style: myThightStyle(
+                                                            color: myTextColor,
+                                                            fontSize: 10,
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
-                                      ),
+                                            ),
                                     ),
                                     buildVerticalSpacer(),
                                   ],
@@ -1230,7 +1223,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                   // ScoreExplanation
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: miniBoxHeights,
+                                    height: circleBoxHeights,
                                     decoration: buildBorderDecoration(),
                                     child: Column(
                                       mainAxisAlignment:
@@ -1329,7 +1322,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                   // HardQuestionsResponse
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: miniBoxHeights,
+                                    height: circleBoxHeights,
                                     decoration: buildBorderDecoration(),
                                     child: Column(
                                       mainAxisAlignment:
@@ -1403,12 +1396,12 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                       ],
                                     ),
                                   ),
-                                  // EasyQuestionsResponse
                                   buildVerticalSpacer(),
+                                  // EasyQuestionsResponse
 
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: miniBoxHeights,
+                                    height: circleBoxHeights,
                                     decoration: buildBorderDecoration(),
                                     child: Column(
                                       mainAxisAlignment:
@@ -1422,7 +1415,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                         CardNameText(
                                             textColors: mySecondaryTextColor,
                                             name:
-                                                "${(headersLabel ?? "total")} kolay  sorularındaki istatistikler"),
+                                                "${(headersLabel ?? "total")} kolay sorularındaki istatistikler"),
                                         Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -1487,7 +1480,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                   // Awards Button
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: (miniBoxHeights / 3) * 2,
+                                    height: miniBoxHeights,
                                     decoration: buildBorderDecoration(),
                                     padding: EdgeInsetsDirectional.only(
                                       top: 20.h,
@@ -1507,7 +1500,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 15.w,
-                                                vertical: 12.w),
+                                                vertical: 15.h),
                                             child: Container(
                                               decoration: buildInsideShadow(),
                                               alignment: Alignment.center,
@@ -1515,20 +1508,12 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                 padding: EdgeInsets.all(3.h),
                                                 child: Image(
                                                   width: mobileContainerWidths,
-                                                  height: (miniBoxHeights / 3) /
-                                                      4 *
-                                                      3.5,
+                                                  height:
+                                                      (miniBoxHeights) * 0.6,
                                                   color: myPrimaryColor,
                                                   image: const AssetImage(
                                                       "assets/icons/trophy_3.png"),
                                                 ),
-
-                                                // SvgPicture.asset(
-                                                //   'assets/icons/trophy_7.png', // SVG dosyasının yolu
-                                                //   color: myPrimaryColor,
-                                                //   width: firstColumnWidth / 3 * 2,
-                                                //   height: firstColumnWidth / 3 * 2,
-                                                // ),
                                               ),
                                             ),
                                           ),
@@ -1581,13 +1566,14 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                     },
                     child: Stack(
                       children: [
-                        /// 🔹 Işık Efekti (Arka Planda)
-                        Positioned.fill(
-                          child: CustomPaint(
-                            painter: LightPainter(_mousePosition),
-                          ),
-                        ),
+                        if (darkMode)
 
+                          /// 🔹 Işık Efekti (Arka Planda)
+                          Positioned.fill(
+                            child: CustomPaint(
+                              painter: LightPainter(_mousePosition),
+                            ),
+                          ),
                         Positioned.fill(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -1609,12 +1595,6 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                       playerController: playerController,
                                     ),
                                   ),
-                                  // buildVerticalSpacer(),
-                                  // NextAndPreButtons(
-                                  //   nextFunc: _nextPlayer,
-                                  //   previousFunc: _previousPlayer,
-                                  //   isPaddingOn: true,
-                                  // ),
                                   buildVerticalSpacer(),
 
                                   // Awards Button
@@ -1676,396 +1656,74 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                 children: [
                                   buildVerticalSpacer(),
 
-                                  // SingleLine Chart
-                                  Container(
-                                    width: secondColumnWidth,
-                                    height: singleLineChartHeight,
-                                    decoration: buildBorderDecoration(),
-                                    child: FutureBuilder(
-                                      future: scoresFuture,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}'));
-                                        } else if (snapshot.hasData) {
-                                          final scoresData =
-                                              snapshot.data as List<Score>;
-                                          return Row(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 16.w, right: 8.w),
-                                                child: SizedBox(
-                                                  width: secondColumnWidth / 7,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Container(
-                                                        width:
-                                                            secondColumnWidth /
-                                                                7,
-                                                        decoration: const BoxDecoration(
-                                                            border: BorderDirectional(
-                                                                bottom: BorderSide(
-                                                                    color:
-                                                                        myAccentColor))),
-                                                        child: Center(
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .end,
-                                                            children: [
-                                                              SizedBox(
-                                                                width: 8.w,
-                                                                child:
-                                                                    FittedBox(
-                                                                  child: Text(
-                                                                    "4.8",
-                                                                    style: myDigitalStyle(
-                                                                        color:
-                                                                            mySecondaryTextColor,
-                                                                        fontSize:
-                                                                            32),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 1.w,
-                                                              ),
-                                                              SizedBox(
-                                                                width: 6.w,
-                                                                child:
-                                                                    const FittedBox(
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .upgrade_outlined,
-                                                                    color:
-                                                                        myAccentColor,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10.h,
-                                                      ),
-                                                      FittedBox(
-                                                        child: Text(
-                                                          "${capitalize((headersLabel ?? "total").toLowerCase())} puanlarının \n ortalama artış miktarı",
-                                                          style: myThightStyle(
-                                                            color:
-                                                                mySecondaryTextColor,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          // Ana Beceri Başlığı
+                                          Container(
+                                            width: indicatorHeight,
+                                            height: headerHeight,
+                                            decoration: buildBorderDecoration(),
+                                            child: Container(
+                                              decoration:
+                                                  buildSelectedDecoration(
+                                                      isMobile(context)),
+                                              margin: EdgeInsetsDirectional
+                                                  .symmetric(
+                                                      vertical: 25.h,
+                                                      horizontal: 50.h),
+                                              padding: EdgeInsetsDirectional
+                                                  .symmetric(
+                                                      vertical: 15.h,
+                                                      horizontal: 20.h),
+                                              child: FittedBox(
                                                 child: Column(
                                                   children: [
-                                                    SizedBox(
-                                                      height: 25.h,
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.fitHeight,
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 15.h),
-                                                            child: Text(
-                                                              "Tüm denemelerdeki ${(headersLabel ?? "total").toLowerCase()} puanları",
-                                                              style:
-                                                                  myThightStyle(
-                                                                color:
-                                                                    mySecondaryTextColor,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
+                                                    Text(
+                                                      headersStatValue != null
+                                                          ? headersStatValue
+                                                              .toString()
+                                                          : "",
+                                                      style: myDigitalStyle(
+                                                          color:
+                                                              mySecondaryTextColor,
+                                                          fontSize: 16),
                                                     ),
-                                                    ShaderMask(
-                                                      shaderCallback:
-                                                          (bounds) =>
-                                                              LinearGradient(
-                                                        begin: Alignment
-                                                            .centerLeft,
-                                                        end: Alignment
-                                                            .centerRight,
-                                                        colors: [
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(1),
-                                                          Colors.white
-                                                              .withOpacity(0.7),
-                                                          Colors.white
-                                                              .withOpacity(
-                                                                  0.35),
-                                                        ],
-                                                        stops: const [
-                                                          0.0,
-                                                          0.05,
-                                                          0.5,
-                                                          0.95,
-                                                          1
-                                                        ],
-                                                      ).createShader(bounds),
-                                                      child:
-                                                          SingleChildScrollView(
-                                                        physics:
-                                                            const BouncingScrollPhysics(),
-                                                        padding: isMobile(
-                                                                context)
-                                                            ? EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 50.w,
-                                                                    end: 75.w,
-                                                                    top: 5,
-                                                                    bottom: 18)
-                                                            : EdgeInsetsDirectional
-                                                                .only(
-                                                                    start: 5.w,
-                                                                    end: 25.w,
-                                                                    top: 0,
-                                                                    bottom: 18),
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            top: 5.h,
-                                                          ),
-                                                          child: SizedBox(
-                                                            width:
-                                                                chartWidthCalculator(
-                                                                    scoresData
-                                                                        .length),
-                                                            height: 90.h,
-                                                            child: ScoreChart(
-                                                                scores:
-                                                                    scoresData),
-                                                          ),
-                                                        ),
-                                                      ),
+                                                    Text(
+                                                      headersLabel ??
+                                                          "Bir ders seçin.",
+                                                      style: myTonicStyle(
+                                                          mySecondaryTextColor),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ],
-                                          );
-                                        } else {
-                                          return const Center(
-                                              child: Text('Player not found.'));
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  buildVerticalSpacer(),
-
-                                  // MultiLine Chart
-                                  Container(
-                                    width: secondColumnWidth,
-                                    height: multiLineHeight,
-                                    decoration: buildBorderDecoration(),
-                                    child: FutureBuilder(
-                                      future: multiScoresFuture,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child: Text(
-                                                  'Error: ${snapshot.error}'));
-                                        } else if (snapshot.hasData) {
-                                          final multiScoresData = snapshot.data;
-
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 20,
-                                                top: 50,
-                                                bottom: 50,
-                                                right: 20),
-                                            child: FittedBox(
-                                              child: MultiLineScoreChart(
-                                                showTags: true,
-                                                scoreMap: multiScoresData!,
-                                                callbackFunct:
-                                                    _updateHeaderFromMultiLine,
-                                                // scoreMap: {
-                                                //   "Türkçe": [
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 99),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 29),
-                                                //   ],
-                                                //   "Matematik": [
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 39),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 19),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 29),
-                                                //   ],
-                                                //   "Fizik": [
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 12),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 12),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 12),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 59),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 69),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 12),
-                                                //     Score(
-                                                //         name: "name",
-                                                //         discipleID: 8,
-                                                //         skillID: 2,
-                                                //         score: 79),
-                                                //   ],
-                                                // },
-                                              ),
                                             ),
-                                          );
-                                        } else {
-                                          return const Center(
-                                              child: Text('Player not found.'));
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  buildSpacer(),
-                                ],
-                              ),
-                              buildLateralSpacer(),
-                              Column(
-                                children: [
-                                  buildVerticalSpacer(),
+                                          ),
+                                          buildVerticalSpacer(),
+                                          // StatsIndicator
+                                          Container(
+                                            width:
+                                                indicatorHeight, // yükseklik ile eşit olmak zorunda.
+                                            height: indicatorHeight,
+                                            decoration: buildBorderDecoration(),
+                                            child: Container(
+                                              decoration: const BoxDecoration(
+                                                color: Colors
+                                                    .transparent, // Dairenin iç rengi
+                                                shape: BoxShape
+                                                    .circle, // Daire şekli
+                                              ),
+                                              //margin: const EdgeInsetsDirectional.all(60),
+                                              child:
+                                                  buildFutureStatsIndicator(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      buildLateralSpacer(),
 
-                                  Row(
-                                    children: [
                                       // SubStats
                                       Container(
                                         width: subStatsWidth,
@@ -2086,206 +1744,228 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                       end: 40.h,
                                                       start: 50.h,
                                                     ),
-                                                    child: FutureBuilder<
-                                                        List<Score>>(
-                                                      key:
-                                                          subStatsFutureResetterKey,
-                                                      future: subStatsFuture,
-                                                      builder:
-                                                          (context, snapshot) {
-                                                        if (snapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .waiting) {
-                                                          return const Center(
-                                                              child:
-                                                                  CircularProgressIndicator());
-                                                        } else if (snapshot
-                                                            .hasError) {
-                                                          return Center(
-                                                              child: Text(
-                                                                  'Error: ${snapshot.error}'));
-                                                        } else if (snapshot
-                                                            .hasData) {
-                                                          final subStatsData =
-                                                              snapshot.data!;
-                                                          subValuesList =
-                                                              subStatsData
-                                                                  .map((score) =>
-                                                                      score
-                                                                          .score
-                                                                          .toDouble())
-                                                                  .toList();
-                                                          subKeysList =
-                                                              subStatsData
-                                                                  .map((score) =>
-                                                                      score
-                                                                          .name)
-                                                                  .toList();
-                                                          subIdsList = subStatsData
-                                                              .map((score) =>
-                                                                  score.skillID)
-                                                              .toList();
-
-                                                          return ListView
-                                                              .builder(
-                                                            physics:
-                                                                const BouncingScrollPhysics(),
-                                                            itemCount:
-                                                                subStatsData
-                                                                    .length,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              return MouseRegion(
-                                                                onEnter: (_) {
-                                                                  setState(() {
-                                                                    hoveredSubSkillIndex =
-                                                                        index; // Hover olan index'i ayarla
-                                                                  });
-                                                                },
-                                                                onExit: (_) {
-                                                                  setState(() {
-                                                                    hoveredSubSkillIndex =
-                                                                        null; // Hover olmayan durumda null yap
-                                                                  });
-                                                                },
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTapUp:
-                                                                      (details) {
-                                                                    setState(
-                                                                        () {
-                                                                      selectedSubSkill =
-                                                                          index;
-                                                                      _updateHeaderFromSubStats(
-                                                                        clickedSkillId:
-                                                                            subIdsList![index],
-                                                                        clickedSkillName:
-                                                                            subKeysList![index],
-                                                                        clickedSkillStat:
-                                                                            subValuesList![index].toInt(),
-                                                                      );
-                                                                    });
-                                                                  },
-                                                                  child:
-                                                                      Container(
-                                                                    // decoration: index == selectedIndex
-                                                                    //     ? buildSelectedDecoration()
-                                                                    //     : BoxDecoration(
-                                                                    //         border: Border.all(
-                                                                    //             color: myPrimaryColor,
-                                                                    //             width: 0.8),
-                                                                    //       ),
-                                                                    margin:
-                                                                        EdgeInsets
-                                                                            .only(
-                                                                      bottom:
-                                                                          15.h,
-                                                                      left: index == hoveredSubSkillIndex ||
-                                                                              index == selectedSubSkill
-                                                                          ? 10
-                                                                          : 0,
-                                                                      right: index == hoveredSubSkillIndex ||
-                                                                              index == selectedSubSkill
-                                                                          ? 0
-                                                                          : 10,
-                                                                      // left: (index % 2 == 1) ? 10 : 0,
-                                                                      // right: (index % 2 == 0) ? 10 : 0,
-                                                                    ),
+                                                    child: Column(
+                                                      children: [
+                                                        Expanded(
+                                                          child: FutureBuilder<
+                                                              List<Score>>(
+                                                            key:
+                                                                subStatsFutureResetterKey,
+                                                            future:
+                                                                subStatsFuture,
+                                                            builder: (context,
+                                                                snapshot) {
+                                                              if (snapshot
+                                                                      .connectionState ==
+                                                                  ConnectionState
+                                                                      .waiting) {
+                                                                return const Center(
                                                                     child:
-                                                                        ClipPath(
-                                                                      clipper:
-                                                                          MySubSkillCardClipper(),
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            27.h,
-                                                                        width:
-                                                                            120,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          border: Border.all(
-                                                                              color: myPrimaryColor,
-                                                                              width: 0.8),
-                                                                        ),
-                                                                        child:
-                                                                            Row(
-                                                                          children: [
-                                                                            const SizedBox(
-                                                                              width: 20,
-                                                                            ),
-                                                                            Expanded(
-                                                                              child: ShaderMask(
-                                                                                shaderCallback: (bounds) {
-                                                                                  return LinearGradient(
-                                                                                    begin: Alignment.centerLeft,
-                                                                                    end: Alignment.centerRight,
-                                                                                    colors: [
-                                                                                      Colors.white.withOpacity(0.9), // Left fade
-                                                                                      Colors.white, // Center fully visible
-                                                                                      Colors.white.withOpacity(0.1), // Right fade
-                                                                                    ],
-                                                                                    stops: const [
-                                                                                      0.0,
-                                                                                      0.80,
-                                                                                      1.0
-                                                                                    ],
-                                                                                  ).createShader(bounds);
-                                                                                },
-                                                                                blendMode: BlendMode.dstIn,
-                                                                                child: SingleChildScrollView(
-                                                                                  scrollDirection: Axis.horizontal,
-                                                                                  child: Padding(
-                                                                                    padding: const EdgeInsets.only(right: 8.0, left: 1.0),
-                                                                                    child: Text(
-                                                                                      subKeysList![index],
-                                                                                      // subStatsData[index].name, böyle yapabilirsin
+                                                                        CircularProgressIndicator());
+                                                              } else if (snapshot
+                                                                  .hasError) {
+                                                                return Center(
+                                                                    child: Text(
+                                                                        'Error: ${snapshot.error}'));
+                                                              } else if (snapshot
+                                                                  .hasData) {
+                                                                final subStatsData =
+                                                                    snapshot
+                                                                        .data!;
+                                                                subValuesList = subStatsData
+                                                                    .map((score) => score
+                                                                        .score
+                                                                        .toDouble())
+                                                                    .toList();
+                                                                subKeysList = subStatsData
+                                                                    .map((score) =>
+                                                                        score
+                                                                            .name)
+                                                                    .toList();
+                                                                subIdsList = subStatsData
+                                                                    .map((score) =>
+                                                                        score
+                                                                            .skillID)
+                                                                    .toList();
 
-                                                                                      style: myTonicStyle(mySecondaryTextColor, fontSize: 12),
+                                                                return ListView
+                                                                    .builder(
+                                                                  physics:
+                                                                      const BouncingScrollPhysics(),
+                                                                  itemCount:
+                                                                      subStatsData
+                                                                          .length,
+                                                                  itemBuilder:
+                                                                      (context,
+                                                                          index) {
+                                                                    return MouseRegion(
+                                                                      onEnter:
+                                                                          (_) {
+                                                                        setState(
+                                                                            () {
+                                                                          hoveredSubSkillIndex =
+                                                                              index; // Hover olan index'i ayarla
+                                                                        });
+                                                                      },
+                                                                      onExit:
+                                                                          (_) {
+                                                                        setState(
+                                                                            () {
+                                                                          hoveredSubSkillIndex =
+                                                                              null; // Hover olmayan durumda null yap
+                                                                        });
+                                                                      },
+                                                                      child:
+                                                                          GestureDetector(
+                                                                        onTapUp:
+                                                                            (details) {
+                                                                          setState(
+                                                                              () {
+                                                                            selectedSubSkill =
+                                                                                index;
+                                                                            _updateHeaderFromSubStats(
+                                                                              clickedSkillId: subIdsList![index],
+                                                                              clickedSkillName: subKeysList![index],
+                                                                              clickedSkillStat: subValuesList![index].toInt(),
+                                                                            );
+                                                                          });
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          // decoration: index == selectedIndex
+                                                                          //     ? buildSelectedDecoration()
+                                                                          //     : BoxDecoration(
+                                                                          //         border: Border.all(
+                                                                          //             color: myPrimaryColor,
+                                                                          //             width: 0.8),
+                                                                          //       ),
+                                                                          margin:
+                                                                              EdgeInsets.only(
+                                                                            bottom:
+                                                                                15.h,
+                                                                            left: index == hoveredSubSkillIndex || index == selectedSubSkill
+                                                                                ? 10
+                                                                                : 0,
+                                                                            right: index == hoveredSubSkillIndex || index == selectedSubSkill
+                                                                                ? 0
+                                                                                : 10,
+                                                                            // left: (index % 2 == 1) ? 10 : 0,
+                                                                            // right: (index % 2 == 0) ? 10 : 0,
+                                                                          ),
+                                                                          child:
+                                                                              ClipPath(
+                                                                            clipper:
+                                                                                MySubSkillCardClipper(),
+                                                                            child:
+                                                                                Container(
+                                                                              height: 27.h,
+                                                                              width: 120,
+                                                                              decoration: BoxDecoration(
+                                                                                border: Border.all(color: myPrimaryColor, width: 0.8),
+                                                                              ),
+                                                                              child: Row(
+                                                                                children: [
+                                                                                  const SizedBox(
+                                                                                    width: 20,
+                                                                                  ),
+                                                                                  Expanded(
+                                                                                    child: ShaderMask(
+                                                                                      shaderCallback: (bounds) {
+                                                                                        return LinearGradient(
+                                                                                          begin: Alignment.centerLeft,
+                                                                                          end: Alignment.centerRight,
+                                                                                          colors: [
+                                                                                            Colors.white.withOpacity(0.9), // Left fade
+                                                                                            Colors.white, // Center fully visible
+                                                                                            Colors.white.withOpacity(0.1), // Right fade
+                                                                                          ],
+                                                                                          stops: const [
+                                                                                            0.0,
+                                                                                            0.80,
+                                                                                            1.0
+                                                                                          ],
+                                                                                        ).createShader(bounds);
+                                                                                      },
+                                                                                      blendMode: BlendMode.dstIn,
+                                                                                      child: SingleChildScrollView(
+                                                                                        scrollDirection: Axis.horizontal,
+                                                                                        child: Padding(
+                                                                                          padding: const EdgeInsets.only(right: 8.0, left: 1.0),
+                                                                                          child: Text(
+                                                                                            subKeysList![index],
+                                                                                            // subStatsData[index].name, böyle yapabilirsin
+
+                                                                                            style: myTonicStyle(mySecondaryTextColor, fontSize: 12),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
                                                                                     ),
                                                                                   ),
-                                                                                ),
+                                                                                  const SizedBox(
+                                                                                    width: 5,
+                                                                                  ),
+                                                                                  ClipPath(
+                                                                                    clipper: MyScoreFieldClipper(),
+                                                                                    child: Container(
+                                                                                      width: 40,
+                                                                                      alignment: Alignment.center,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color: darkMode ? Colors.black.withOpacity(0.4) : Colors.white.withOpacity(0.2),
+                                                                                        // border:
+                                                                                        //     const BorderDirectional(
+                                                                                        //   top: BorderSide(
+                                                                                        //       color: myPrimaryColor,
+                                                                                        //       width: 0),
+                                                                                        // ),
+                                                                                      ),
+                                                                                      child: Text(
+                                                                                        subValuesList![index].toInt().toString(),
+                                                                                        style: myDigitalStyle(color: mySecondaryTextColor),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
                                                                               ),
                                                                             ),
-                                                                            const SizedBox(
-                                                                              width: 5,
-                                                                            ),
-                                                                            ClipPath(
-                                                                              clipper: MyScoreFieldClipper(),
-                                                                              child: Container(
-                                                                                width: 40,
-                                                                                alignment: Alignment.center,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: darkMode ? Colors.black.withOpacity(0.4) : Colors.white.withOpacity(0.2),
-                                                                                  // border:
-                                                                                  //     const BorderDirectional(
-                                                                                  //   top: BorderSide(
-                                                                                  //       color: myPrimaryColor,
-                                                                                  //       width: 0),
-                                                                                  // ),
-                                                                                ),
-                                                                                child: Text(
-                                                                                  subValuesList![index].toInt().toString(),
-                                                                                  style: myDigitalStyle(color: mySecondaryTextColor),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ],
+                                                                          ),
                                                                         ),
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              );
+                                                                    );
+                                                                  },
+                                                                );
+                                                              } else {
+                                                                return const Center(
+                                                                    child: Text(
+                                                                        'No data'));
+                                                              }
                                                             },
-                                                          );
-                                                        } else {
-                                                          return const Center(
+                                                          ),
+                                                        ),
+                                                        buildVerticalSpacer(),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 0.w,
+                                                                  right: 10.w,
+                                                                  bottom: 20.h),
+                                                          child: SizedBox(
+                                                            height: 30,
+                                                            width:
+                                                                mobileContainerWidths,
+                                                            child: Center(
                                                               child: Text(
-                                                                  'No data'));
-                                                        }
-                                                      },
+                                                                "Bir konu seçebilirsiniz.",
+                                                                style:
+                                                                    myThightStyle(
+                                                                  color:
+                                                                      mySecondaryTextColor,
+                                                                  fontSize: 10,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   )
                                                 : Padding(
@@ -2309,7 +1989,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                               textColors:
                                                                   mySecondaryTextColor,
                                                               name:
-                                                                  "güçlü konular"),
+                                                                  "En yüksek puanlı konular"),
                                                         ),
                                                         Padding(
                                                           padding:
@@ -2448,7 +2128,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                               textColors:
                                                                   mySecondaryTextColor,
                                                               name:
-                                                                  "zayıf konular"),
+                                                                  "En düşük puanlı konular"),
                                                         ),
                                                         Padding(
                                                           padding:
@@ -2589,7 +2269,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                             width: 35.w,
                                                             child: FittedBox(
                                                               child: Text(
-                                                                "Tüm denemelerdeki istatistiklere göre",
+                                                                "Son denemedeki istatistiklere göre",
                                                                 style:
                                                                     myThightStyle(
                                                                   color:
@@ -2605,76 +2285,85 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                           ),
                                         ),
                                       ),
-
-                                      buildLateralSpacer(),
-                                      Column(
-                                        children: [
-                                          // Ana Beceri Başlığı
-                                          Container(
-                                            width: indicatorHeight,
-                                            height: headerHeight,
-                                            decoration: buildBorderDecoration(),
-                                            child: Container(
-                                              decoration:
-                                                  buildSelectedDecoration(
-                                                      isMobile(context)),
-                                              margin: EdgeInsetsDirectional
-                                                  .symmetric(
-                                                      vertical: 25.h,
-                                                      horizontal: 50.h),
-                                              padding: EdgeInsetsDirectional
-                                                  .symmetric(
-                                                      vertical: 15.h,
-                                                      horizontal: 20.h),
-                                              child: FittedBox(
-                                                child: Column(
-                                                  children: [
-                                                    Text(
-                                                      headersStatValue != null
-                                                          ? headersStatValue
-                                                              .toString()
-                                                          : "",
-                                                      style: myDigitalStyle(
-                                                          color:
-                                                              mySecondaryTextColor,
-                                                          fontSize: 16),
-                                                    ),
-                                                    Text(
-                                                      headersLabel ??
-                                                          "Bir ders seçin.",
-                                                      style: myTonicStyle(
-                                                          mySecondaryTextColor),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          buildVerticalSpacer(),
-                                          // StatsIndicator
-                                          Container(
-                                            width:
-                                                indicatorHeight, // yükseklik ile eşit olmak zorunda.
-                                            height: indicatorHeight,
-                                            decoration: buildBorderDecoration(),
-                                            child: Container(
-                                              decoration: const BoxDecoration(
-                                                color: Colors
-                                                    .transparent, // Dairenin iç rengi
-                                                shape: BoxShape
-                                                    .circle, // Daire şekli
-                                              ),
-                                              //margin: const EdgeInsetsDirectional.all(60),
-                                              child:
-                                                  buildFutureStatsIndicator(),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
                                     ],
                                   ),
                                   buildVerticalSpacer(),
-                                  // ScoreExplanation
+                                  // easy ques ScoreExplanation
+                                  Container(
+                                    width: secondColumnWidth,
+                                    height: miniBoxHeights,
+                                    decoration: buildBorderDecoration(),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        CardNameText(
+                                            textColors: mySecondaryTextColor,
+                                            name:
+                                                "${(headersLabel ?? "total")} kolay sorularındaki istatistikler"),
+                                        Row(
+                                          // mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            buildSpacer(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0),
+                                              child: Text(
+                                                textAlign: TextAlign.end,
+                                                "kolay soru sayısı :   ",
+                                                style: myThightStyle(
+                                                    color:
+                                                        mySecondaryTextColor),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 2.w,
+                                            ),
+                                            Text(
+                                              totalEasyQuestions.toString(),
+                                              style: myDigitalStyle(
+                                                  color: mySecondaryTextColor,
+                                                  fontSize: 22),
+                                            ),
+                                            SizedBox(
+                                              width: 20.w,
+                                            ),
+                                            SizedBox(
+                                              // width: indicatorHeight,
+                                              height: miniBoxHeights - 42.h,
+                                              child: QuestionStatsCard(
+                                                totalQuestions:
+                                                    totalEasyQuestions,
+                                                correct: correctOfEasy,
+                                                wrong: wrongOfEasy,
+                                                empty: totalEasyQuestions -
+                                                    (correctOfEasy +
+                                                        wrongOfEasy),
+                                              ),
+                                            ),
+                                            buildSpacer(),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  buildSpacer(),
+                                ],
+                              ),
+                              buildLateralSpacer(),
+                              Column(
+                                children: [
+                                  buildVerticalSpacer(),
+
+                                  // hard ques ScoreExplanation
                                   Container(
                                     width: thirdColumnWidth,
                                     height: miniBoxHeights,
@@ -2691,7 +2380,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                         CardNameText(
                                             textColors: mySecondaryTextColor,
                                             name:
-                                                "${(headersLabel ?? "total")} Puan Analizi"),
+                                                "${(headersLabel ?? "total")} zor sorularındaki istatistikler"),
                                         Row(
                                           // mainAxisAlignment: MainAxisAlignment.center,
                                           crossAxisAlignment:
@@ -2708,7 +2397,114 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                           top: 10.0),
                                                   child: Text(
                                                     textAlign: TextAlign.end,
-                                                    "zorluk : ",
+                                                    "zor soru sayısı :   ",
+                                                    style: myThightStyle(
+                                                        color:
+                                                            mySecondaryTextColor),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 2.w,
+                                                ),
+                                                Text(
+                                                  totalHardQuestions.toString(),
+                                                  style: myDigitalStyle(
+                                                      color:
+                                                          mySecondaryTextColor,
+                                                      fontSize: 22),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              width: 20.w,
+                                            ),
+                                            SizedBox(
+                                              // width: indicatorHeight,
+                                              height: miniBoxHeights - 42.h,
+                                              child: QuestionStatsCard(
+                                                totalQuestions:
+                                                    totalHardQuestions,
+                                                correct: correctOfHards,
+                                                wrong: wrongOfHards,
+                                                empty: totalHardQuestions -
+                                                    (correctOfHards +
+                                                        wrongOfHards),
+                                              ),
+                                            ),
+                                            buildSpacer(),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  buildVerticalSpacer(),
+
+                                  // ScoreExplanation
+                                  Container(
+                                    width: thirdColumnWidth,
+                                    height: multiLineHeight,
+                                    decoration: buildBorderDecoration(),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                        ),
+                                        CardNameText(
+                                            textColors: mySecondaryTextColor,
+                                            name:
+                                                "${(headersLabel ?? "total")} Puan Analizi"),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            buildVerticalSpacer(),
+                                            buildVerticalSpacer(),
+                                            buildVerticalSpacer(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: Text(
+                                                    textAlign: TextAlign.end,
+                                                    "net :   ",
+                                                    style: myThightStyle(
+                                                        color:
+                                                            mySecondaryTextColor),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 2.w,
+                                                ),
+                                                Text(
+                                                  "22.5",
+                                                  style: myDigitalStyle(
+                                                      color:
+                                                          mySecondaryTextColor,
+                                                      fontSize: 22),
+                                                ),
+                                                buildLateralSpacer(),
+                                                buildLateralSpacer(),
+                                                buildLateralSpacer(),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: Text(
+                                                    textAlign: TextAlign.end,
+                                                    "zorluk :   ",
                                                     style: myThightStyle(
                                                         color:
                                                             mySecondaryTextColor),
@@ -2724,23 +2520,48 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                           mySecondaryTextColor,
                                                       fontSize: 22),
                                                 ),
+                                                buildLateralSpacer(),
+                                                buildLateralSpacer(),
+                                                buildLateralSpacer(),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: Text(
+                                                    textAlign: TextAlign.end,
+                                                    "sıralama :   ",
+                                                    style: myThightStyle(
+                                                        color:
+                                                            mySecondaryTextColor),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 2.w,
+                                                ),
+                                                Text(
+                                                  "22.",
+                                                  style: myDigitalStyle(
+                                                      color:
+                                                          mySecondaryTextColor,
+                                                      fontSize: 22),
+                                                ),
                                               ],
                                             ),
                                             SizedBox(
-                                              width: 20.w,
+                                              height: 50.h,
                                             ),
                                             SizedBox(
                                               // width: indicatorHeight,
-                                              height: miniBoxHeights - 42.h,
+                                              height: multiLineHeight / 2,
                                               child: QuestionStatsCard(
                                                 totalQuestions: totalQuestions,
                                                 correct: correct,
                                                 wrong: wrong,
                                                 empty: totalQuestions -
                                                     (correct + wrong),
+                                                bigCircular: true,
                                               ),
                                             ),
-                                            buildSpacer(),
                                           ],
                                         ),
                                       ],
@@ -2819,7 +2640,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
             keysList.add("-");
           }
           return PolygonContainer(
-            radius: 150.h,
+            radius: isMobile(context) ? 45 : 150.h,
             labels: keysList,
             data: valuesList,
             ids: idsList,

@@ -28,7 +28,9 @@ BoxDecoration buildBorderDecoration() {
   return BoxDecoration(
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.4), // Gölge rengi ve opaklığı
+        color: darkMode
+            ? Colors.black.withOpacity(0.4)
+            : Colors.black.withOpacity(0.2), // Gölge rengi ve opaklığı
         blurRadius: 10, // Gölgenin yayılma miktarı
         offset: const Offset(5, 5), // Gölgenin x ve y eksenindeki kayması
       ),

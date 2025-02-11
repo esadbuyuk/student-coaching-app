@@ -29,7 +29,7 @@ class PolygonChart extends StatelessWidget {
 
     List<double> fixedDataForChart = divideBy100(data);
 
-    double width = isMobile(context) ? (radius * 2).w : (radius * 2);
+    double width = isMobile(context) ? (radius * 2) : (radius * 2);
     return CustomPaint(
       size: Size(width, width),
       painter: PolygonChartPainter(
@@ -147,13 +147,13 @@ class PolygonContainerState extends State<PolygonContainer> {
     double containersRadius = widget.radius; // 120.h
 
     double polygonsRadius = isMobile(context)
-        ? 40.w
+        ? containersRadius
         : containersRadius / 30 * 11; // sorun bu değerler de!
 
     double stacksWidth =
-        isMobile(context) ? 205.w : containersRadius / 5; // containersRadius
+        isMobile(context) ? 220 : containersRadius / 5; // containersRadius
 
-    double marginSize = isMobile(context) ? 45.w : containersRadius / 30 * 11;
+    double marginSize = isMobile(context) ? 40 : containersRadius / 30 * 11;
     double polygonsBorderRadius = polygonsRadius + marginSize;
     int dataLength = widget.data.isEmpty ? 5 : widget.data.length;
     List<String> displayLabels = widget.labels;

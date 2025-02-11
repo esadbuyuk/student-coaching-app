@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pcaweb/controller/ui_controller.dart';
 import 'package:pcaweb/view/widgets/widget_decorations.dart';
 
 import '../../model/my_constants.dart';
@@ -53,7 +55,9 @@ class ScoreChartState extends State<ScoreChart>
       builder: (context, child) {
         return Container(
           decoration: buildInsideShadow(),
-          padding: const EdgeInsets.only(right: 15),
+          padding: EdgeInsets.only(
+              right: 15,
+              top: isMobile(context) ? 30.h : 20.h), // burayı arttırmalısın!
           child: CustomPaint(
             size: const Size(double.infinity, 300),
             painter: ScoreChartPainter(widget.scores, widget.scores2,

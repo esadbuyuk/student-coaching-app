@@ -8,6 +8,7 @@ class QuestionStatsCard extends StatefulWidget {
   final int correct;
   final int wrong;
   final int empty;
+  final bool bigCircular;
 
   const QuestionStatsCard({
     super.key,
@@ -15,6 +16,7 @@ class QuestionStatsCard extends StatefulWidget {
     required this.correct,
     required this.wrong,
     required this.empty,
+    this.bigCircular = false,
   });
 
   @override
@@ -92,9 +94,21 @@ class _QuestionStatsCardState extends State<QuestionStatsCard>
 
   @override
   Widget build(BuildContext context) {
-    double circularsHeight = isMobile(context) ? 120.h : 70.h;
-    double circularsWidth = isMobile(context) ? 120.h : 70.h;
-    double circularsStrokeWidth = isMobile(context) ? 9 : 7;
+    double circularsHeight = isMobile(context)
+        ? 120.h
+        : widget.bigCircular
+            ? 180.h
+            : 70.h;
+    double circularsWidth = isMobile(context)
+        ? 120.h
+        : widget.bigCircular
+            ? 180.h
+            : 70.h;
+    double circularsStrokeWidth = isMobile(context)
+        ? 9
+        : widget.bigCircular
+            ? 14
+            : 7;
     Color textColors = mySecondaryTextColor;
     Color trueColor = myAccentColor;
     Color falseColor = Colors.red;
@@ -158,7 +172,7 @@ class _QuestionStatsCardState extends State<QuestionStatsCard>
                           },
                         ),
                         SizedBox(
-                          width: isMobile(context) ? 16.w : 6.w,
+                          width: 16.w,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +245,7 @@ class _QuestionStatsCardState extends State<QuestionStatsCard>
                           },
                         ),
                         SizedBox(
-                          width: isMobile(context) ? 16.w : 6.w,
+                          width: widget.bigCircular ? 14.w : 6.w,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

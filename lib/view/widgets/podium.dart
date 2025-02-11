@@ -116,7 +116,7 @@ class _PodiumState extends State<Podium> {
     switch (rank) {
       case 2:
         return Container(
-          height: 60,
+          height: 60.h,
           width: 50,
           decoration: BoxDecoration(
             color: secondColor,
@@ -138,7 +138,7 @@ class _PodiumState extends State<Podium> {
         );
       case 1:
         return Container(
-            height: 80,
+            height: 80.h,
             width: 70,
             decoration: BoxDecoration(
               color: firstColor,
@@ -159,7 +159,7 @@ class _PodiumState extends State<Podium> {
             ));
       case 3:
         return Container(
-          height: 40,
+          height: 40.h,
           width: 50,
           decoration: BoxDecoration(
             color: thirdColor,
