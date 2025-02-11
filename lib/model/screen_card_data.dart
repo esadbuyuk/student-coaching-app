@@ -32,18 +32,18 @@ class ScreenCardData {
             '/monthWinners', // playerID: userController.getUserID()
       ),
 
-      ScreenCard(
-        title: 'PROFİL',
-        icon: Icons.person_outline, // Web uyumlu ikon
-        destinationPage: userController.isUserAuthorized()
-            ? '/trainerProfile'
-            : '/playerProfile', // playerID: userController.getUserID()
-      ),
-      ScreenCard(
-        title: 'KOÇLAR',
-        icon: Icons.groups_outlined, // Web uyumlu ikon
-        destinationPage: '/trainerProfile',
-      ),
+      // ScreenCard(
+      //   title: 'PROFİL',
+      //   icon: Icons.person_outline, // Web uyumlu ikon
+      //   destinationPage: userController.isUserAuthorized()
+      //       ? '/trainerProfile'
+      //       : '/playerProfile', // playerID: userController.getUserID()
+      // ),
+      // ScreenCard(
+      //   title: 'KOÇLAR',
+      //   icon: Icons.groups_outlined, // Web uyumlu ikon
+      //   destinationPage: '/trainerProfile',
+      // ),
       // ScreenCard(
       //   title: 'RESULTS',
       //   icon: Icons.note_alt_outlined, // Web uyumlu ikon

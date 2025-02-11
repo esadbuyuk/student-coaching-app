@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UserController userController = UserController();
-    int buttonCount = 4;
+    int buttonCount = 3;
 
     return SafeArea(
       child: Scaffold(

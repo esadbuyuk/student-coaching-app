@@ -1980,12 +1980,12 @@ class ChartsPageState extends State<ChartsPage>
                                                 height: multiLineHeight * 0.8,
                                                 child: Padding(
                                                   padding: EdgeInsets.only(
-                                                      left: 50.w,
+                                                      left: 30.w,
                                                       top: 10.h,
                                                       bottom: 10.h,
-                                                      right: 50.w),
+                                                      right: 30.w),
                                                   child: FittedBox(
-                                                    fit: BoxFit.fitHeight,
+                                                    //  fit: BoxFit.fitHeight,
                                                     child: DifficultyMultiChart(
                                                       // düzgün çalışmıyor
                                                       showTags: true,
@@ -3159,10 +3159,10 @@ class ChartsPageState extends State<ChartsPage>
                                                 children: [
                                                   Padding(
                                                     padding: EdgeInsets.only(
-                                                        left: 16.w, right: 8.w),
+                                                        left: 12.w, right: 8.w),
                                                     child: SizedBox(
                                                       width:
-                                                          thirdColumnWidth / 7,
+                                                          thirdColumnWidth / 6,
                                                       child: Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -3171,6 +3171,32 @@ class ChartsPageState extends State<ChartsPage>
                                                             CrossAxisAlignment
                                                                 .center,
                                                         children: [
+                                                          SizedBox(
+                                                            height: 40.h,
+                                                            child: Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: FittedBox(
+                                                                child: Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          top: 0
+                                                                              .h),
+                                                                  child: Text(
+                                                                    "Puan hesaplanırken soruların\nzorluğu da değerlendirilir.",
+                                                                    style:
+                                                                        myThightStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color:
+                                                                          mySecondaryTextColor,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
                                                           Container(
                                                             width:
                                                                 thirdColumnWidth /
@@ -3577,11 +3603,11 @@ class ChartsPageState extends State<ChartsPage>
                                               // height: 25.h,
                                               child: Align(
                                                 alignment: Alignment.center,
-                                                child: FittedBox(
-                                                  fit: BoxFit.fitHeight,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: 40.h),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 40.h,
+                                                  ),
+                                                  child: FittedBox(
                                                     child: Text(
                                                       // "Tüm denemelerdeki ${(headersLabel ?? "total").toLowerCase()} netleri ve diğer öğrencilerin net ortalaması",
                                                       "Zorluk Grafiği",
@@ -3615,12 +3641,12 @@ class ChartsPageState extends State<ChartsPage>
                                                         multiLineHeight * 0.8,
                                                     child: Padding(
                                                       padding: EdgeInsets.only(
-                                                          left: 50.w,
+                                                          left: 10.w,
                                                           top: 10.h,
                                                           bottom: 10.h,
-                                                          right: 50.w),
+                                                          right: 10.w),
                                                       child: FittedBox(
-                                                        fit: BoxFit.fitHeight,
+                                                        // fit: BoxFit.fitHeight,
                                                         child:
                                                             DifficultyMultiChart(
                                                           // düzgün çalışmıyor

@@ -185,7 +185,7 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                   controller: scrollController,
                                   child: ListView.builder(
                                     controller: scrollController,
-                                    physics: const PageScrollPhysics(),
+                                    physics: const BouncingScrollPhysics(),
                                     itemCount: playerListData!.length,
                                     padding: EdgeInsets.only(
                                         top: 60.h, bottom: 180.h),
@@ -196,7 +196,7 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                         onExit: (_) => setState(() =>
                                             isHoveredList[playerNo] = false),
                                         child: GestureDetector(
-                                          onTapDown: (details) {
+                                          onTap: () {
                                             if (!isMobile(context)) {
                                               context.go('/lastTestResults');
                                             }
