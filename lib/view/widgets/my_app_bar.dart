@@ -4,10 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../controller/academy_controller.dart';
 import '../../model/my_constants.dart';
 
-AppBar buildAppBar(
-  BuildContext context,
-  bool showLogo,
-) {
+AppBar buildAppBar(BuildContext context, bool showLogo, {String? pageName}) {
   final AcademyController academyController = AcademyController();
 
   return AppBar(
@@ -44,8 +41,10 @@ AppBar buildAppBar(
               // ),
               // const SizedBox(width: 10),
               Text(
-                academyController.getAbbreviatedName(),
-                style: myBrandStyle(),
+                pageName ?? academyController.getAbbreviatedName(),
+                style: pageName == null
+                    ? myBrandStyle()
+                    : myTonicStyle(myIconsColor),
               ),
             ],
           )

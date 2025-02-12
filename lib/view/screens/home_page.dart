@@ -43,6 +43,7 @@ class HomePage extends StatelessWidget {
               ),
               SizedBox(
                 height: 250,
+                width: 480,
                 child: FittedBox(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -62,9 +63,6 @@ class HomePage extends StatelessWidget {
 
                       // SizedBox(
                       //     width: 180.h, child: FittedBox(child: BrandName())),
-                      SizedBox(
-                        height: 10.h,
-                      ),
                       // SizedBox(
                       //     width: 180.h,
                       //     child: const FittedBox(child: HomeText())),

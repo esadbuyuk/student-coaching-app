@@ -57,7 +57,10 @@ class _ScoreListPageState extends State<ScoreListPage> {
     double boxWidths = isMobile(context) ? 100.w : 25.w;
     return SafeArea(
       child: Scaffold(
-        appBar: buildAppBar(context, true),
+        appBar: buildAppBar(
+          context,
+          false,
+        ),
         // resizeToAvoidBottomInset: false,
         body: FutureBuilder(
           future: futurePlayerList,
@@ -253,8 +256,11 @@ class _ScoreListPageState extends State<ScoreListPage> {
                                               child: Row(
                                                 children: [
                                                   SizedBox(
-                                                    width: 85.w,
+                                                    width: isMobile(context)
+                                                        ? 135.w
+                                                        : 75.w,
                                                     child: Text(
+                                                      maxLines: 1,
                                                       style: myTonicStyle(
                                                         isHoveredList[playerNo]
                                                             ? mySecondaryTextColor

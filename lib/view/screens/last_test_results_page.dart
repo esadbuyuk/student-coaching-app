@@ -531,7 +531,8 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                   },
                   child: Scaffold(
                     resizeToAvoidBottomInset: false,
-                    appBar: buildAppBar(context, true),
+                    appBar:
+                        buildAppBar(context, true, pageName: "DENEME ANALİZİ"),
                     backgroundColor: darkMode
                         ? myBackgroundColor.withOpacity(0.93)
                         : myBackgroundColor.withOpacity(0.8),
@@ -1223,7 +1224,9 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                   // ScoreExplanation
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: circleBoxHeights,
+                                    height: headersStatValue == null
+                                        ? circleBoxHeights
+                                        : circleBoxHeights * 1.3,
                                     decoration: buildBorderDecoration(),
                                     child: Column(
                                       mainAxisAlignment:
@@ -1238,6 +1241,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                             textColors: mySecondaryTextColor,
                                             name:
                                                 "${(headersLabel ?? "total")} Puan Analizi"),
+                                        buildSpacer(),
                                         Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -1251,6 +1255,30 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
+                                                buildSpacer(),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0),
+                                                  child: Text(
+                                                    textAlign: TextAlign.end,
+                                                    "net :   ",
+                                                    style: myThightStyle(
+                                                        color:
+                                                            mySecondaryTextColor),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 2.w,
+                                                ),
+                                                Text(
+                                                  "23.5",
+                                                  style: myDigitalStyle(
+                                                      color:
+                                                          mySecondaryTextColor,
+                                                      fontSize: 22),
+                                                ),
+                                                buildSpacer(),
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
@@ -1273,8 +1301,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                           mySecondaryTextColor,
                                                       fontSize: 22),
                                                 ),
-                                                buildLateralSpacer(),
-                                                buildLateralSpacer(),
+                                                buildSpacer(),
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
@@ -1297,6 +1324,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                           mySecondaryTextColor,
                                                       fontSize: 22),
                                                 ),
+                                                buildSpacer(),
                                               ],
                                             ),
                                             buildVerticalSpacer(),
@@ -1312,9 +1340,23 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                     (correct + wrong),
                                               ),
                                             ),
-                                            // buildVerticalSpacer(),
+                                            buildVerticalSpacer(),
+                                            if (headersStatValue != null)
+                                              SizedBox(
+                                                height: 80.h,
+                                                child: FittedBox(
+                                                  child: Text(
+                                                    "${headersStatValue}",
+                                                    style: myDigitalStyle(
+                                                      color:
+                                                          mySecondaryTextColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
                                           ],
                                         ),
+                                        buildSpacer(),
                                       ],
                                     ),
                                   ),
@@ -1480,7 +1522,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                   // Awards Button
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: miniBoxHeights,
+                                    height: miniBoxHeights * 0.7,
                                     decoration: buildBorderDecoration(),
                                     padding: EdgeInsetsDirectional.only(
                                       top: 20.h,
@@ -1509,7 +1551,7 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                                                 child: Image(
                                                   width: mobileContainerWidths,
                                                   height:
-                                                      (miniBoxHeights) * 0.6,
+                                                      (miniBoxHeights) * 0.3,
                                                   color: myPrimaryColor,
                                                   image: const AssetImage(
                                                       "assets/icons/trophy_3.png"),
@@ -1540,7 +1582,8 @@ class LastTestResultsPageState extends State<LastTestResultsPage>
                 )
               : Scaffold(
                   resizeToAvoidBottomInset: false,
-                  appBar: buildAppBar(context, true),
+                  appBar: buildAppBar(context, true,
+                      pageName: "SON DENEME ANALİZİ"),
                   backgroundColor: darkMode
                       ? myBackgroundColor.withOpacity(0.93)
                       : myBackgroundColor.withOpacity(0.8),

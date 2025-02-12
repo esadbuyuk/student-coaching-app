@@ -516,7 +516,7 @@ class ChartsPageState extends State<ChartsPage>
                   },
                   child: Scaffold(
                     resizeToAvoidBottomInset: false,
-                    appBar: buildAppBar(context, true),
+                    appBar: buildAppBar(context, true, pageName: "GRAFİKLER"),
                     backgroundColor: darkMode
                         ? myBackgroundColor.withOpacity(0.93)
                         : myBackgroundColor.withOpacity(0.8),
@@ -2130,7 +2130,7 @@ class ChartsPageState extends State<ChartsPage>
                                   // Awards Button
                                   Container(
                                     width: mobileContainerWidths,
-                                    height: miniBoxHeights,
+                                    height: miniBoxHeights * 0.7,
                                     decoration: buildBorderDecoration(),
                                     padding: EdgeInsetsDirectional.only(
                                       top: 20.h,
@@ -2158,7 +2158,7 @@ class ChartsPageState extends State<ChartsPage>
                                                 padding: EdgeInsets.all(3.h),
                                                 child: Image(
                                                   width: mobileContainerWidths,
-                                                  height: miniBoxHeights * 0.6,
+                                                  height: miniBoxHeights * 0.3,
                                                   color: myPrimaryColor,
                                                   image: const AssetImage(
                                                       "assets/icons/trophy_3.png"),
@@ -2196,7 +2196,7 @@ class ChartsPageState extends State<ChartsPage>
                 )
               : Scaffold(
                   resizeToAvoidBottomInset: false,
-                  appBar: buildAppBar(context, true),
+                  appBar: buildAppBar(context, true, pageName: "GRAFİKLER"),
                   backgroundColor: darkMode
                       ? myBackgroundColor.withOpacity(0.93)
                       : myBackgroundColor.withOpacity(0.8),
